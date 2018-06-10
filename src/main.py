@@ -9,13 +9,12 @@ import os
 import sys
 
 import tornado.httpserver
-from tornado.ioloop import IOLoop
 import tornado.platform.twisted
 import tornado.web
 
 from tbag.core.context import TornadoContext
-from tbag.utils import log as logger
-from tbag.utils import tools
+
+# os.environ['PYTHONASYNCIODEBUG'] = '1'
 
 
 def init_tasks():

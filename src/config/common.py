@@ -15,7 +15,7 @@ CONSOLE_OUTPUT = 1
 
 # Log
 LOG = {
-    'level': 'info',
+    'level': 'debug',
     'dir': '/tmp/logs/fpserver',
     'filename': 'server.log'
 }
@@ -28,7 +28,7 @@ REDIS = {
 
 # stop crawling new proxies
 # after stored enough proxied
-PROXY_STORE_NUM = 5000
+PROXY_STORE_NUM = 500
 
 # Check availability in cycle
 PROXY_STORE_CHECK_SEC = 3600

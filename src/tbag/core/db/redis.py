@@ -25,6 +25,8 @@ class RedisDBBase:
     """ redis db基类
     """
 
+    cli = REDIS_CONN_POOL
+
     async def exec_cmd(self, *args, **kwargs):
         """ 执行命令
         """

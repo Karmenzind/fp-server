@@ -1,19 +1,17 @@
 # -*- coding:utf-8 -*-
 
-import sys
 import asyncio
+import sys
+from tornado.platform.asyncio import AnyThreadEventLoopPolicy
 
-import tornado.web
-import tornado.ioloop
-import tornado.httpserver
 from tornado import options
 from tornado.ioloop import IOLoop
 from tornado.web import Application
 
+from tbag.core.middleware import Middleware
+from tbag.utils import log as logger
 from tbag.utils import tools
 from tbag.utils.routes import route
-from tbag.utils import log as logger
-from tbag.core.middleware import Middleware
 
 
 class TornadoContext(object):
@@ -41,6 +39,7 @@ class TornadoContext(object):
         self.loop = None
         self.setting_module = setting_module
 
+        self._init_event_loop_policy()
         self._get_event_loop()
         self._load_settings()
         self._init_logger()
@@ -50,20 +49,24 @@ class TornadoContext(object):
         self._init_application()
         self._do_heartbeat()
 
+    def _init_event_loop_policy(self):
+        asyncio.set_event_loop_policy(AnyThreadEventLoopPolicy())
+
     def start(self):
         """ 启动
         """
         logger.info('start io loop ...')
-        self.loop.run_forever()
         # self.loop.start()
         # self.loop.start()
-        # IOLoop().start()
+        IOLoop.current().start()
+        # self.loop.run_forever()
 
     def _get_event_loop(self):
-        if not self.loop:
-            self.loop = IOLoop()
-            tornado.ioloop.IOLoop.configure('tornado.platform.asyncio.AsyncIOMainLoop')
-            self.loop = asyncio.get_event_loop()
+        # if not self.loop:
+        #     # self.loop = IOLoop.current()
+        #     # tornado.ioloop.IOLoop.configure('tornado.platform.asyncio.AsyncIOMainLoop')
+        #     self.loop = asyncio.get_event_loop()
+        #     IOLoop().make_current()
         return self.loop
 
     def _load_settings(self):
@@ -144,8 +147,8 @@ class TornadoContext(object):
         if self.redis_config:
             from tbag.core.db.redis import initRedisPool
             logger.info('redis config:', self.redis_config, caller=self)
-            self.loop.run_until_complete(initRedisPool(**self.redis_config))
-            # IOLoop.current().add_callback(initRedisPool, **self.redis_config)
+            # self.loop.run_until_complete(initRedisPool(**self.redis_config))
+            IOLoop.current().add_callback(initRedisPool, **self.redis_config)
         logger.info('init db instance done <<<', caller=self)
 
     def _init_middlewares(self):
@@ -184,4 +187,4 @@ class TornadoContext(object):
         """
         from tbag.core.heartbeat import heartbeat
         logger.info('Heartbeat started...')
-        IOLoop.current().call_later(1, heartbeat.start)
+        IOLoop.current().call_later(3, heartbeat.start)

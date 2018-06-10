@@ -93,6 +93,7 @@ class _BaseSpider(CrawlSpider):
     def build_check_request(self, item):
         scheme = item.get('scheme')
         proxy_url = item.get('url')
+        self.logger.debug('Checking proxy: %s' % proxy_url)
 
         url, response_parser = self.get_check_approach(scheme)
         url = url.format(scheme=scheme)

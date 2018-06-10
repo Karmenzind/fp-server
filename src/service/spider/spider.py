@@ -12,9 +12,11 @@ from proxy_spider.spiders.yundaili import YundailiSpider
 from tbag.utils import log as logger
 from utils.db import aioredis_pool, pyredis_pool
 from utils.proxy import key_prefix as proxy_key_prefix
-from utils.spider import build_key, key_prefix, updated_crawler_settings
-from scrapy.utils.log import configure_logging
+from utils.spider import build_key, key_prefix  # , updated_crawler_settings
+# from scrapy.utils.log import configure_logging
 from scrapy.crawler import Crawler
+from tornado.ioloop import IOLoop
+from tbag.core.db.redis import RedisDBBase
 
 
 class SpiderServer:
@@ -143,14 +145,17 @@ class SpiderServer:
             st = await self.register_status(key)
             # TODO: specify settings
             logger.info('Started %s at %s. Key: %s.' % (st, spider, key))
-
-            crawler = self.get_crawler(spider)
-            d = crawler_runner.crawl(crawler)
+            self.run_crawler(spider)
+            # IOLoop.current().run_in_executor(None, self.run_crawler, spider)
             started.append(key)
-            # unregister
-            d.addBoth(self.callback_unregister_status, st=st, key=key)
 
         return started
+
+    def run_crawler(self, spider):
+        crawler = self.get_crawler(spider)
+        d = crawler_runner.crawl(crawler)
+        # # unregister
+        # d.addBoth(self.callback_unregister_status, st=st, key=key)
 
     def get_crawler(self, spider):
         """

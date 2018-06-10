@@ -15,7 +15,7 @@ def init_scrapy_env():
     sys.path.append(settings_dir)
     sys.path.append(settings_mod)
     sys.path.append(cur_dir)
-    print(sys.path)
+    # print(sys.path)
 
     os.environ['SCRAPY_PROJECT'] = 'proxy_spider'
     os.environ['SCRAPY_SETTINGS_MODULE'] = 'proxy_spider.settings'
