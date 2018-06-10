@@ -102,3 +102,9 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# custom
+for_todo.md
+./src/.scrapy
+./src/launch_spider.py
+.idea/
