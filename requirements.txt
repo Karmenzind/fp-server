@@ -43,11 +43,10 @@ queuelib==1.5.0
 redis==2.10.6
 requests==2.18.4
 Scrapy==1.5.0
-scrapydo==0.2.2
 service-identity==17.0.0
 simplegeneric==0.8.1
 six==1.11.0
-tornado==4.5.3
+tornado==5.0.2
 Tornado-MySQL==0.5.1
 traitlets==4.3.2
 Twisted==18.4.0
