@@ -22,7 +22,7 @@ This project has been tested on:
 - Archlinux; Python-3.6.5
 - Debian(wsl); Python-3.5.3
 
-Ant it **doesn't support Windows** for now...
+And it **doesn't support Windows** for now...
 
 ## Contents ##
 
