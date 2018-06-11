@@ -11,7 +11,12 @@ Features:
 - support high con-concurrent
 - automatically check proxy in cycle and ditch unavailable ones
 
-> 中文文档正在写…… _(:ι」∠)_
+基于Tornado和Scrapy的免费代理服务器
+- 持续爬取新代理
+- 易用的HTTP api
+- 异步，支持高并发
+- 定时检测代理可用性，自动更新
+> 中文文档正在写……  \_(:ι」∠)\_
 
 ## Contents ##
 
@@ -142,13 +147,14 @@ Path: `{repo}/src/config/common.py`
 
 Growing……
 
-- [ x ] [西刺代理](www.xicidaili.com)
-- [ x ] [快代理](http://www.kuaidaili.com)
-- [ x ] [云代理](http://www.ip3366.net) (partial)
-- [   ] [小幻代理](https://ip.ihuan.me) (figuring)
-- [   ] [万能代理](http://wndaili.cn)
-- [   ] [89免费代理](http://www.89ip.cn/)
-- [   ] [66免费代理](http://www.66ip.cn/)
+Supporting:
+- [x] [西刺代理](http://www.xicidaili.com)
+- [x] [快代理](http://www.kuaidaili.com)
+- [x] [云代理](http://www.ip3366.net) (partial)
+- [ ] [小幻代理](https://ip.ihuan.me) (figuring)
+- [ ] [万能代理](http://wndaili.cn)
+- [ ] [89免费代理](http://www.89ip.cn/)
+- [ ] [66免费代理](http://www.66ip.cn/)
 
 ## Bugs and feature requests ##
 
