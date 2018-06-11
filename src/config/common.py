@@ -12,8 +12,8 @@ CONSOLE_OUTPUT = 1
 # Log
 LOG = {
     'level': 'debug',
-    'dir': '/tmp/logs/fpserver',
-    'filename': 'server.log'
+    'dir': './logs',
+    'filename': 'fpserver.log'
 }
 
 REDIS = {

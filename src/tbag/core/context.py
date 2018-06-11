@@ -115,8 +115,8 @@ class TornadoContext(object):
         """ 初始化日志
         """
         level = self.log_config.get('level', 'debug')
-        dirname = self.log_config.get('dir', '/tmp/logs')
-        filename = self.log_config.get('filename', 'tbag.log')
+        dirname = self.log_config.get('dir', './logs')
+        filename = self.log_config.get('filename', 'fpserver.log')
         if self.console_output:
             logger.initLogger()
         else:

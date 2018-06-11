@@ -18,6 +18,12 @@ Features:
 - 定时检测代理可用性，自动更新
 > 中文文档正在写……  \_(:ι」∠)\_
 
+This project has been tested on:
+- Archlinux; Python-3.6.5
+- Debian(wsl); Python-3.5.3
+
+Ant it **doesn't support Windows** for now...
+
 ## Contents ##
 
 <!-- vim-markdown-toc GFM -->

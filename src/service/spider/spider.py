@@ -145,8 +145,12 @@ class SpiderServer:
             st = await self.register_status(key)
             # TODO: specify settings
             logger.info('Started %s at %s. Key: %s.' % (st, spider, key))
-            self.run_crawler(spider, st, key)
-            # IOLoop.current().run_in_executor(None, self.run_crawler, spider)
+            # self.run_crawler(spider, st, key)
+            IOLoop.current().run_in_executor(None,
+                                             self.run_crawler,
+                                             spider,
+                                             st,
+                                             key)
             started.append(key)
 
         return started

@@ -32,7 +32,7 @@ def _get_log_config():
     log_config = getattr(config, 'LOG', {})
     # fix: divide log from tornado log
     if not getattr(config, 'CONSOLE_OUTPUT', 0):
-        dirname = log_config.get('dir', '/tmp/logs/fpserver')
+        dirname = log_config.get('dir', './logs')
         dirname = os.path.expanduser(dirname)
         if not os.path.exists(dirname):
             os.mkdir(dirname)
