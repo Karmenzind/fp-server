@@ -6,6 +6,10 @@
 import os
 import sys
 
+# FIX: Why must crochet?
+import crochet
+crochet.setup()
+
 
 def init_scrapy_env():
     cur_dir = os.path.dirname(os.path.realpath(__file__))
@@ -28,6 +32,7 @@ def init_crawler_runner():
     settings = get_project_settings()
 
     return CrawlerRunner(settings)
+
 
 init_scrapy_env()
 crawler_runner = init_crawler_runner()

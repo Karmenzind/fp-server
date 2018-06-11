@@ -145,17 +145,17 @@ class SpiderServer:
             st = await self.register_status(key)
             # TODO: specify settings
             logger.info('Started %s at %s. Key: %s.' % (st, spider, key))
-            self.run_crawler(spider)
+            self.run_crawler(spider, st, key)
             # IOLoop.current().run_in_executor(None, self.run_crawler, spider)
             started.append(key)
 
         return started
 
-    def run_crawler(self, spider):
+    def run_crawler(self, spider, st, key):
         crawler = self.get_crawler(spider)
         d = crawler_runner.crawl(crawler)
-        # # unregister
-        # d.addBoth(self.callback_unregister_status, st=st, key=key)
+        # unregister
+        d.addBoth(self.callback_unregister_status, st=st, key=key)
 
     def get_crawler(self, spider):
         """

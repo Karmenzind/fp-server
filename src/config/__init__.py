@@ -10,3 +10,6 @@ HANDLER_PATHES = ['api']
 
 # whether support cross-domain
 # ALLOW_CORS = True
+
+# auto reload
+DEBUG = False

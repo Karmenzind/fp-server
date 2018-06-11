@@ -3,11 +3,7 @@
 """
 FP-Server main settings
 """
-
-# auto reload
-DEBUG = False
-
-# host and ip
+# server's http port
 HTTP_PORT = 12345
 
 # redirect output to console other than log file
@@ -28,7 +24,7 @@ REDIS = {
 
 # stop crawling new proxies
 # after stored enough proxied
-PROXY_STORE_NUM = 500
+PROXY_STORE_NUM = 6000
 
 # Check availability in cycle
 PROXY_STORE_CHECK_SEC = 3600

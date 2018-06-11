@@ -34,7 +34,7 @@ Features:
 2. Clone this repo. 
 3. Install python packages by: 
 ```bash
-pip install -r requirements
+pip install -r requirements.txt
 ```
 4. Read the [config](#config) and modify it according to your need.
 5. Start the server:

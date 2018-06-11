@@ -5,16 +5,12 @@
 API for proxy
 """
 
-import scrapydo
+
+from service.proxy.proxy import proxy_srv
 from tbag.utils import log as logger
 from tbag.utils.routes import route
-from service.proxy.proxy import proxy_srv
-
-from proxy_spider.spiders.xicidaili import XicidailiSpider
 from utils import exceptions
 from utils.web import WebHandler
-
-scrapydo.setup()
 
 
 def return_developing():
@@ -62,12 +58,3 @@ class ReposrProxyHandler(WebHandler):
 
     async def post(self, *args, **kwargs):
         self.do_success({'ok': 1}, 'developing..')
-
-
-@route(r'/api/spider/$')
-class TestSpiderHandler(WebHandler):
-
-    async def get(self, *args, **kwargs):
-        return_developing()
-        scrapydo.run_spider(XicidailiSpider)
-        self.do_success({'ok': 1}, 'todo')

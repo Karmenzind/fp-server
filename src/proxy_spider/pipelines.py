@@ -33,12 +33,3 @@ class PersistencePipeline:
                 logger.exception("Item: %s" % item)
 
         return item
-
-# class CheckAvailablityPipiline:
-#     """
-#     check proxy's anonymity
-#     """
-# 
-#     def process_item(self, item, spider):
-#         logger = spider.logger
-#         return item
