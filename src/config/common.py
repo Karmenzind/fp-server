@@ -24,7 +24,7 @@ REDIS = {
 
 # stop crawling new proxies
 # after stored enough proxied
-PROXY_STORE_NUM = 6000
+PROXY_STORE_NUM = 500
 
 # Check availability in cycle
 PROXY_STORE_CHECK_SEC = 3600

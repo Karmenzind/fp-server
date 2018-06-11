@@ -16,7 +16,6 @@ crochet==1.9.0
 cryptography==2.2.2
 cssselect==1.0.3
 decorator==4.3.0
-hiredis==0.2.0
 hyperlink==18.0.0
 idna==2.6
 incremental==17.5.0
@@ -26,13 +25,9 @@ jedi==0.12.0
 lxml==4.2.1
 motor==1.1
 parsel==1.4.0
-parso==0.2.1
-pexpect==4.6.0
 pickleshare==0.7.4
 prompt-toolkit==1.0.15
 ptyprocess==0.5.2
-pyasn1==0.4.3
-pyasn1-modules==0.2.1
 pycparser==2.18
 PyDispatcher==2.0.5
 Pygments==2.2.0
