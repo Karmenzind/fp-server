@@ -89,7 +89,6 @@ ROBOTSTXT_OBEY = False
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'proxy_spider.pipelines.ProxyspiderPipeline': 300,
     'proxy_spider.pipelines.PersistencePipeline': 333,
 }
 

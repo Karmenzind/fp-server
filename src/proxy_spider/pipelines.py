@@ -10,11 +10,6 @@ from scrapy.exceptions import DropItem
 from proxy_spider.items import Proxy
 
 
-class ProxyspiderPipeline:
-    def process_item(self, item, spider):
-        return item
-
-
 class PersistencePipeline:
     def __init__(self):
         self.srv = blocking_proxy_srv

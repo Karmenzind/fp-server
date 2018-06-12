@@ -39,42 +39,30 @@ class _BaseException(Exception):
 
 
 class ValidationError(_BaseException):
-    """ 字段校验错误
-    """
     default_msg = 'Bad Request'
     default_code = 400
 
 
 class NotAuthenticated(_BaseException):
-    """ 未授权
-    """
     default_msg = 'Unauthorized'
     default_code = 401
 
 
 class AuthenticationFailed(_BaseException):
-    """ 权限校验失败
-    """
     default_msg = 'Forbidden'
     default_code = 403
 
 
 class NotFound(_BaseException):
-    """ 未找到
-    """
     default_msg = 'Not found'
     default_code = 404
 
 
 class SystemError(_BaseException):
-    """ 系统内部错误
-    """
     default_msg = 'Internal Server Error'
     default_code = 500
 
 
 class TimeoutException(_BaseException):
-    """ 超时
-    """
     default_msg = 'Timeout'
     default_code = 504

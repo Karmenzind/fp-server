@@ -13,9 +13,8 @@ crochet.setup()
 
 def init_scrapy_env():
     cur_dir = os.path.dirname(os.path.realpath(__file__))
-
     settings_dir = os.path.join(cur_dir, 'proxy_spider')
-    settings_mod = os.path.join(settings_dir, 'settings.py')
+    # settings_mod = os.path.join(settings_dir, 'settings.py')
     sys.path.append(settings_dir)
     sys.path.append(cur_dir)
 

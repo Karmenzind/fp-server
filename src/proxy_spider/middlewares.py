@@ -55,6 +55,9 @@ class CustomRetryMiddleware(RetryMiddleware):
 
 class FPServerMiddleware(HttpProxyMiddleware):
     """
+    * This middleware is trying to figure out
+      how to use this server in a general scrapy project
+
     A middleware, based on FPServer, continuesly providing random proxy.
     FPServer required.
 
@@ -63,8 +66,6 @@ class FPServerMiddleware(HttpProxyMiddleware):
         HTTPPROXY_AUTH_ENCODING     O   default: latin-l
         FP_SERVER_PROXY_ANONYMITY   O   default: random
             choices:    `transparent` `anonymous`
-        # FP_SERVER_PROXY_SCHEME      O   default: random
-        #     choices:    `HTTP` `HTTPS`
     """
 
     def __init__(self,
@@ -175,16 +176,8 @@ class FPServerMiddleware(HttpProxyMiddleware):
 
 class PureRedisMiddleware(HttpProxyMiddleware):
     """
-    A middleware, based on FPServer, continuesly providing random proxy.
-    FPServer required.
-
-    required config items: (Must/Optional)
-        FP_SERVER_URL               M
-        HTTPPROXY_AUTH_ENCODING     O   default: latin-l
-        FP_SERVER_PROXY_ANONYMITY   O   default: random
-            choices:    `transparent` `anonymous`
-        # FP_SERVER_PROXY_SCHEME      O   default: random
-        #     choices:    `HTTP` `HTTPS`
+    Straightly fetch proxy from redis database.
+    Waiting to be reconstructed.
     """
 
     def __init__(self,

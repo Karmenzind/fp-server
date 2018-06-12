@@ -12,8 +12,6 @@ aioredis_pool = None
 
 
 async def initRedisPool(host='localhost', port=6379, db=None, *args, **kw):
-    """ 初始化连接池
-    """
     url = 'redis://%s:%s' % (host, port)
     global aioredis_pool
     aioredis_pool = await aioredis.create_redis_pool(url,

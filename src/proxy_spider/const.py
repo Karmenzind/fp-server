@@ -1,4 +1,7 @@
 # coding: utf-8
+"""
+many user_agents
+"""
 
 # http://www.useragentstring.com/pages/useragentstring.php
 user_agents = [
