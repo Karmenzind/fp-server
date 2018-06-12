@@ -11,12 +11,14 @@ Features:
 - support high con-concurrent
 - automatically check proxy in cycle and ditch unavailable ones
 
-基于Tornado和Scrapy的免费代理服务器
-- 持续爬取新代理
+
+免费代理服务器，基于[Tornado](http://www.tornadoweb.org/en/stable/#)和[Scrapy](https://scrapy.org/)，在本地搭建属于自己的代理池
+- 持续爬取新的免费代理
 - 易用的HTTP api
 - 异步，支持高并发
-- 定时检测代理可用性，自动更新
-> 中文文档正在写……  \_(:ι」∠)\_
+- 周期性检测代理可用性，自动更新
+
+[**查看中文文档\_(:ι」∠)\_**](./README_CN.md) 
 
 This project has been tested on:
 - Archlinux; Python-3.6.5
@@ -52,7 +54,7 @@ pip install -r requirements.txt
 ```bash
 python ./src/main.py
 ```
-6. Then use the [APIs](#apis) to get proxies.
+6. Then use the [APIs](#web-apis) to get proxies.
 
 ## web APIs ##
 
@@ -68,7 +70,7 @@ typical response:
 ```
 
 -   code: result of event (not http code), 0 for sucess
--   msg: message for failed event
+-   msg: message for event
 -   data: detail for sucessful event
 
 ### get proxies ###
