@@ -4,7 +4,7 @@
 http uri 路由装饰器
 """
 
-from tbag.utils import log as logger
+from utils import log as logger
 
 
 class route(object):

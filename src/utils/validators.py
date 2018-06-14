@@ -8,8 +8,8 @@ Update: None
 
 import json
 
-from tbag.utils import datetime_help
-from tbag.core import exceptions
+from utils import time_ext
+from core import exceptions
 
 
 def _field(data, field, required):
@@ -123,7 +123,7 @@ def dict_field(data, field=None, required=True):
 def datetime_field(data, field=None, required=True):
     field_data = _field(data, field, required)
     try:
-        return datetime_help.parse_datetime(field_data) if field_data is not None else None
+        return time_ext.parse_datetime(field_data) if field_data is not None else None
     except:
         raise exceptions.ValidationError('%s是ISO_8601格式的时间字符串' % field)
 
@@ -131,6 +131,6 @@ def datetime_field(data, field=None, required=True):
 def date_field(data, field=None, required=True):
     field_data = _field(data, field, required)
     try:
-        return datetime_help.parse_date(field_data) if field_data is not None else None
+        return time_ext.parse_date(field_data) if field_data is not None else None
     except:
         raise exceptions.ValidationError('%s是ISO_8601格式的日期字符串' % field)

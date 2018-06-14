@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 
-from tbag.utils.routes import route
-from utils.web import WebHandler
+from utils.routes import route
+from core.web import WebHandler
 from service.spider.spider import spider_srv
 from service.proxy.proxy import proxy_srv
 

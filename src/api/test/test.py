@@ -5,11 +5,9 @@
 API for proxy
 """
 
-from tbag.utils import log as logger
-from tbag.utils.routes import route
+from utils.routes import route
 
-from utils import exceptions
-from utils.web import WebHandler
+from core.web import WebHandler
 
 
 @route(r'/api/spider/run_all/$')

@@ -4,9 +4,9 @@
     ping-pong
 """
 
-from tbag.utils.routes import route
-from tbag.utils import log as logger
-from utils.web import WebHandler
+from utils.routes import route
+from utils import log as logger
+from core.web import WebHandler
 
 
 @route(r'/api/ping/$')

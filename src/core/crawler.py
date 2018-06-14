@@ -5,10 +5,14 @@
 
 import os
 import sys
+from utils import log as logger
 
-# FIX: Why must crochet?
+# XXX: Why must crochet?
 import crochet
-crochet.setup()
+from scrapy.crawler import CrawlerRunner
+from scrapy.utils.project import get_project_settings
+
+CRAWLER_RUNNER = None
 
 
 def init_scrapy_env():
@@ -23,15 +27,12 @@ def init_scrapy_env():
 
 
 def init_crawler_runner():
-    from scrapy.crawler import CrawlerRunner
-    from scrapy.utils.project import get_project_settings
-
+    crochet.setup()
+    init_scrapy_env()
     settings = get_project_settings()
+    global CRAWLER_RUNNER
+    CRAWLER_RUNNER = CrawlerRunner(settings)
+    logger.info('Initialized crawler runner: %s' % CRAWLER_RUNNER)
 
-    return CrawlerRunner(settings)
 
-
-init_scrapy_env()
-crawler_runner = init_crawler_runner()
-
-__all__ = [crawler_runner, ]
+__all__ = [CRAWLER_RUNNER, ]

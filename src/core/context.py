@@ -8,15 +8,12 @@ from tornado import options
 from tornado.ioloop import IOLoop
 from tornado.web import Application
 
-from tbag.core.middleware import Middleware
-from tbag.utils import log as logger
-from tbag.utils import tools
-from tbag.utils.routes import route
+from core.middleware import Middleware
+from utils import log as logger, tools
+from utils.routes import route
 
 
 class TornadoContext(object):
-    """ 初始化日志、uri路由、数据库连接，启动服务器心跳
-    """
 
     def __init__(self, setting_module):
         """ 初始化
@@ -45,6 +42,7 @@ class TornadoContext(object):
         self._init_logger()
         self._init_middlewares()
         self._init_db_instance()
+        self._init_crawler_runner()
         self._init_uri_routes()
         self._init_application()
         self._do_heartbeat()
@@ -137,18 +135,19 @@ class TornadoContext(object):
         """
         logger.info('init db instance start >>>', caller=self)
         if self.mysql_config:
-            from tbag.core.db.mysql import initMySQL
+            from core.db.mysql import initMySQL
             logger.info('mysql config:', self.mysql_config, caller=self)
             initMySQL(**self.mysql_config)
         if self.mongo_config:
-            from tbag.core.db.mongo import initMongodb
+            from core.db.mongo import initMongodb
             logger.info('mongodb config:', self.mongo_config, caller=self)
             initMongodb(**self.mongo_config)
         if self.redis_config:
-            from tbag.core.db.redis import initRedisPool
+            from core.db.redis import initRedisPool
             logger.info('redis config:', self.redis_config, caller=self)
             # self.loop.run_until_complete(initRedisPool(**self.redis_config))
-            IOLoop.current().add_callback(initRedisPool, **self.redis_config)
+            # IOLoop.current().add_callback(initRedisPool, **self.redis_config)
+            IOLoop.current().run_sync(initRedisPool)
         logger.info('init db instance done <<<', caller=self)
 
     def _init_middlewares(self):
@@ -172,7 +171,7 @@ class TornadoContext(object):
         logger.info('load middleware done <<<', caller=self)
 
     def _init_application(self):
-        """ 初始化HTTP监听服务
+        """ Initialize tornado app
         """
         settings = {
             'debug': self.debug,
@@ -183,8 +182,14 @@ class TornadoContext(object):
         logger.info('listen http port at:', self.http_port, caller=self)
 
     def _do_heartbeat(self):
-        """ 服务器心跳
+        """ initialize heartbeat
         """
-        from tbag.core.heartbeat import heartbeat
+        from core.heartbeat import heartbeat
         logger.info('Heartbeat started...')
-        IOLoop.current().call_later(3, heartbeat.start)
+        IOLoop.current().add_callback(heartbeat.start)
+
+    def _init_crawler_runner(self):
+        """ initialize scrapy env and crawler runner
+        """
+        from core.crawler import init_crawler_runner
+        init_crawler_runner()

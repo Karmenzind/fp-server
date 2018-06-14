@@ -3,20 +3,23 @@
 import time
 
 import config
-from initial import crawler_runner
+# from initial import crawler_runner
+from core.crawler import CRAWLER_RUNNER as crawler_runner
 from proxy_spider.spiders.checker import CheckerSpider
 # from proxy_spider.spiders.ihuan import IhuanSpider
 from proxy_spider.spiders.kuaidaili import KuaidailiSpider
 from proxy_spider.spiders.xicidaili import XicidailiSpider
 from proxy_spider.spiders.yundaili import YundailiSpider
-from tbag.utils import log as logger
-from utils.db import aioredis_pool, pyredis_pool
+from utils import log as logger
+# from utils.db import aioredis_pool, pyredis_pool
+from utils.db import pyredis_pool
+from core.db.redis import REDIS_CONN_POOL as aioredis_pool
 from utils.proxy import key_prefix as proxy_key_prefix
 from utils.spider import build_key, key_prefix  # , updated_crawler_settings
 # from scrapy.utils.log import configure_logging
+
 from scrapy.crawler import Crawler
 from tornado.ioloop import IOLoop
-from tbag.core.db.redis import RedisDBBase
 
 
 class SpiderServer:

@@ -2,46 +2,42 @@
 
 import aioredis
 
-from tbag.utils import log as logger
+from utils import log as logger
 
 __all__ = ('initRedisPool', 'RedisDBBase')
 
+REDIS_CONN_POOL = None
 
-REDIS_CONN_POOL = None  # redis连接池
 
-
-async def initRedisPool(host='localhost', port=6379, db=None, *args, **kw):
-    """ 初始化连接池
-    """
+async def initRedisPool():
+    import config
+    _config = getattr(config, 'REDIS', {})
+    host = _config.get('host', 'localhost')
+    port = _config.get('port', 6379)
+    db = _config.get('db', 0)
     url = 'redis://%s:%s' % (host, port)
     global REDIS_CONN_POOL
     REDIS_CONN_POOL = await aioredis.create_redis_pool(url,
                                                        db=db,
                                                        encoding='utf-8')
-    logger.info('Create redis pool success. Got pool: %s.' % REDIS_CONN_POOL)
+    logger.info('Initialized aioredis pool: %s.' % REDIS_CONN_POOL)
 
 
 class RedisDBBase:
-    """ redis db基类
-    """
 
     cli = REDIS_CONN_POOL
 
     async def exec_cmd(self, *args, **kwargs):
-        """ 执行命令
-        """
         result = await REDIS_CONN_POOL.execute(*args, **kwargs)
         logger.debug('cmd:', *args, 'result:', result, caller=self)
-
         return result
-
 
 #######################################################################
 #                              snippits                               #
 #######################################################################
 
-#import asyncio
-#from tornado.ioloop import IOLoop
+# import asyncio
+# from tornado.ioloop import IOLoop
 #
 # class RedisDBBase:
 #     """ redis连接

@@ -12,13 +12,13 @@ import tornado.httpserver
 import tornado.platform.twisted
 import tornado.web
 
-from tbag.core.context import TornadoContext
+from core.context import TornadoContext
 
 # os.environ['PYTHONASYNCIODEBUG'] = '1'
 
 
 def init_tasks():
-    from tbag.core.heartbeat import heartbeat
+    from core.heartbeat import heartbeat
     from service.tasks.spider import SpiderTasks
     spider_task = SpiderTasks()
     heartbeat.register(spider_task.start)

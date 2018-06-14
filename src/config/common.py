@@ -28,4 +28,3 @@ PROXY_STORE_NUM = 500
 
 # Check availability in cycle
 PROXY_STORE_CHECK_SEC = 3600
-

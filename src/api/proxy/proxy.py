@@ -7,10 +7,10 @@ API for proxy
 
 
 from service.proxy.proxy import proxy_srv
-from tbag.utils import log as logger
-from tbag.utils.routes import route
-from utils import exceptions
-from utils.web import WebHandler
+from utils.routes import route
+from utils import log as logger
+from core import exceptions
+from core.web import WebHandler
 
 
 def return_developing():

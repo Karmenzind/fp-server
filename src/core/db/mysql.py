@@ -8,7 +8,7 @@ Update: 2017/12/17  1. 修改配置参数user为username;
 """
 
 from tornado_mysql import pools, cursors
-from tbag.utils import log as logger
+from utils import log as logger
 
 pools.DEBUG = True
 CONN_POOL = None

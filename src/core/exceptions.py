@@ -1,16 +1,29 @@
-# -*- coding:utf-8 -*-
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
-"""
-错误类型定义
-Date:   2017/12/7
-Update: 2017/12/22  1. 修复bug: 继承类默认msg和code失效；
-        2018/03/14  1. 修改异常类型；
-"""
+#######################################################################
+#                             error const                             #
+#######################################################################
+
+MSG_OK = {'code': 0, 'msg': 'OK'}
+
+
+# common errors
+ERR_MSG_INVALID = {'code': 400, 'msg': 'Failed'}
+ERR_MSG_WRONG_PARAMS = {'code': 400, 'msg': 'Check the params you input'}
+ERR_MSG_PERMISSION_ERROR = {'code': 401, 'msg': 'Authentication failed'}
+ERR_MSG_BODY_ERROR = {'code': 411, 'msg': 'Invalid body format'}
+ERR_MSG_SYSTEM_ERROR = {'code': 500, 'msg': 'Internal error'}
+ERR_MSG_IS_DEVELOPING = {'code': 99999, 'msg': 'TODO...'}
+
+# paticular errors
+
+#######################################################################
+#                          custom exceptions                          #
+#######################################################################
 
 
 class CustomException(Exception):
-    """ 通用异常类型错误
-    """
     default_msg = 'A server error occurred.'
     default_data = None
     default_code = 500
@@ -26,42 +39,30 @@ class CustomException(Exception):
 
 
 class ValidationError(CustomException):
-    """ 字段校验错误
-    """
     default_msg = 'Bad Request'
     default_code = 400
 
 
 class NotAuthenticated(CustomException):
-    """ 未授权
-    """
     default_msg = 'Unauthorized'
     default_code = 401
 
 
 class AuthenticationFailed(CustomException):
-    """ 权限校验失败
-    """
     default_msg = 'Forbidden'
     default_code = 403
 
 
 class NotFound(CustomException):
-    """ 未找到
-    """
     default_msg = 'Not found'
     default_code = 404
 
 
 class SystemError(CustomException):
-    """ 系统内部错误
-    """
     default_msg = 'Internal Server Error'
     default_code = 500
 
 
 class TimeoutException(CustomException):
-    """ 超时
-    """
     default_msg = 'Timeout'
     default_code = 504

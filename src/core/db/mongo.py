@@ -19,9 +19,7 @@ import motor
 from bson.objectid import ObjectId
 from urllib.parse import quote_plus
 
-from tbag.utils import tools
-from tbag.utils import log as logger
-
+from utils import log as logger, time_ext
 
 MONGO_CONN = None
 DELETE_FLAG = 'delete'  # True 已经删除，False 或者没有该字段表示没有删除
@@ -103,7 +101,7 @@ class MongoDBBase(object):
         docs = copy.deepcopy(docs_data)
         ret_ids = []
         is_one = False
-        create_time = tools.get_utc_time()
+        create_time = time_ext.get_utc_time()
         if not isinstance(docs, list):
             docs = [docs]
             is_one = True
@@ -130,7 +128,7 @@ class MongoDBBase(object):
         if '_id' in spec:
             spec['_id'] = self._convert_id_object(spec['_id'])
         set_fields = update_fields.get('$set', {})
-        set_fields['modify_time'] = tools.get_utc_time()
+        set_fields['modify_time'] = time_ext.get_utc_time()
         update_fields['$set'] = set_fields
         if not multi:
             result = await self.dao.update_one(spec, update_fields, upsert=upsert)
@@ -189,7 +187,7 @@ class MongoDBBase(object):
         if '_id' in spec:
             spec['_id'] = self._convert_id_object(spec['_id'])
         set_fields = update_fields.get('$set', {})
-        set_fields['modify_time'] = tools.get_utc_time()
+        set_fields['modify_time'] = time_ext.get_utc_time()
         update_fields['$set'] = set_fields
         result = await self.dao.find_one_and_update(spec, update_fields, projection=fields, upsert=upsert,
                                                     return_document=return_document)

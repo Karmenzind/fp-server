@@ -11,7 +11,7 @@ from itertools import chain
 
 from scrapy import Item
 
-from tbag.utils import log as logger
+from utils import log as logger
 from utils.proxy import build_key, build_pattern, key_prefix
 
 
@@ -120,7 +120,8 @@ class ProxyServer(_ProxyServerBase):
     """
 
     def __init__(self):
-        from utils.db import aioredis_pool
+        # from utils.db import aioredis_pool
+        from core.db.redis import REDIS_CONN_POOL as aioredis_pool
         self.cli = aioredis_pool
 
     async def get_all_status(self):

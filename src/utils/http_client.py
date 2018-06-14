@@ -1,22 +1,12 @@
 # -*- coding:utf-8 -*-
 
-"""
-tornado实现的HTTP异步非阻塞客户端
-
-Date:   2017/07/31
-Update: 2017/09/19  1. 增加对POST请求body的编码格式区分;
-        2017/09/26  1. 增加请求超时时间;
-        2017/11/21  1. 增加对返回结果decode_type为空的判断;
-        2017/12/26  1. 修复bug: 引入被删除的模块;
-"""
-
 import json
 
 from tornado.httpclient import AsyncHTTPClient
 from tornado.httputil import url_concat, urlencode
 
-from tbag.core import exceptions
-from tbag.utils import log as logger
+from core import exceptions
+from utils import log as logger
 
 
 class AsyncHttpRequests(object):
