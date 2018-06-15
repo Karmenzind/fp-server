@@ -50,3 +50,4 @@ w3lib==1.19.0
 wcwidth==0.1.7
 wrapt==1.10.11
 zope.interface==4.5.0
+PyYAML==3.12

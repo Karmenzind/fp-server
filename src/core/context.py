@@ -12,6 +12,18 @@ from core.middleware import Middleware
 from utils import log as logger, tools
 from utils.routes import route
 
+welcome = """
+ _____ ____      ____
+|  ___|  _ \    / ___|  ___ _ ____   _____ _ __
+| |_  | |_) |___\___ \ / _ \ '__\ \ / / _ \ '__|
+|  _| |  __/_____|__) |  __/ |   \ V /  __/ |
+|_|   |_|       |____/ \___|_|    \_/ \___|_|
+
+Github: https://github.com/Karmenzind/fp-server
+E-Mail: valesail7@gmail.com
+================================================
+"""
+
 
 class TornadoContext(object):
 
@@ -33,6 +45,7 @@ class TornadoContext(object):
             `MONGODB`           mongodb配置
             `REDIS`             redis配置
         """
+        print(welcome)
         self.loop = None
         self.setting_module = setting_module
 
@@ -114,7 +127,7 @@ class TornadoContext(object):
         """
         level = self.log_config.get('level', 'debug')
         dirname = self.log_config.get('dir', './logs')
-        filename = self.log_config.get('filename', 'fpserver.log')
+        filename = self.log_config.get('filename', 'fp-server.log')
         if self.console_output:
             logger.initLogger()
         else:

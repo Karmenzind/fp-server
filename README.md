@@ -22,19 +22,23 @@ Features:
 
 This project has been tested on:
 - Archlinux; Python-3.6.5
-- Debian(wsl); Python-3.5.3
+- Debian(WSL); Python-3.5.3
 
-And it **doesn't support Windows** for now...
+And it **cannot directly run on windows**. Windows users may try [using Docker](#using-docker) or WSL to run this project.
 
 ## Contents ##
 
 <!-- vim-markdown-toc GFM -->
 
 * [Get started](#get-started)
+    * [Using Docker](#using-docker)
+    * [Manually install](#manually-install)
 * [web APIs](#web-apis)
     * [get proxies](#get-proxies)
     * [check status](#check-status)
 * [Config](#config)
+    * [Introduction](#introduction)
+    * [Customization](#customization)
 * [Source webs](#source-webs)
 * [Bugs and feature requests](#bugs-and-feature-requests)
 * [TODOs](#todos)
@@ -43,7 +47,25 @@ And it **doesn't support Windows** for now...
 
 ## Get started ##
 
-1. Install base requirements: `python>=3.5`(I use Python-3.6.5) `redis`
+Firstly you should have [Redis](https://redis.io/) installed. Then choose either one option as follows.
+After successful deployment,  use the [APIs](#web-apis) to get proxies.
+
+### Using Docker ###
+
+The easiest way to run this repo is using [Docker](https://www.docker.com/). Install Docker then run:
+```bash
+# download the image
+docker pull karmenzind/fp-server:stable
+# run the container
+docker run -itd --name fpserver --net="host" karmenzind/fp-server:stable
+# check the output inside the container
+docker logs -f fpserver
+```
+For custom configuratiuon, see [this section](#config).
+
+### Manually install ###
+
+1. Install `python>=3.5`(I use Python-3.6.5)
 2. Clone this repo. 
 3. Install python packages by: 
 ```bash
@@ -54,7 +76,6 @@ pip install -r requirements.txt
 ```bash
 python ./src/main.py
 ```
-6. Then use the [APIs](#web-apis) to get proxies.
 
 ## web APIs ##
 
@@ -63,9 +84,7 @@ typical response:
 {
     "code": 0,
     "msg": "ok",
-    "data": {
-        ...
-    }
+    "data": {}
 }
 ```
 
@@ -108,8 +127,7 @@ anonymity               | O                 | choices:`transparent` `anonymous` 
                 "scheme": "HTTP",
                 "url": "http://xxx.xxx.xxx.xx:xxxx",
                 "anonymity": "transparent"
-            },
-            ...
+            }
             ]
         }
     }
@@ -137,23 +155,65 @@ No params.
 
 ## Config ##
 
-Path: `{repo}/src/config/common.py`
+### Introduction ###
+I choose YAML language for configuration file. The defination and default value for supported items are:
 
-- `HTTP_PORT`   decide which http port to run on (default: 12345)
-- `CONSOLE_OUTPUT`  if set to 1, the server will print log to console other than file (default: 1)
-- `LOG`  log config, including:
-    - `level` `dir` and `filename`, logging to file requires `CONSOLE_OUTPUT = 0`
-- `REDIS`  redis database config, including:
-    - `host` `port` `db`
-- `PROXY_STORE_NUM` the number of proxy you need (default 500)
-    - After reached this number, the crawler stopped crawling new proxies.
-    - Set it depending on your need. 
-- `PROXY_STORE_CHECK_SEC` every proxy will be checked in period
-    - It's for each single proxy, not the checker spider.
+```yaml
+# server's http port
+HTTP_PORT: 12345
+
+# redirect output to console other than log file
+CONSOLE_OUTPUT: 1
+
+# Log
+# dir and filename requires `CONSOLE_OUTPUT: 0`
+LOG: 
+  level: 'debug'
+  dir: './logs'
+  filename: 'fp-server.log'
+
+# redis database
+REDIS:
+  host: '127.0.0.1'
+  port: 6379
+  db: 0
+
+# stop crawling new proxies
+# after stored this many proxies
+PROXY_STORE_NUM: 500
+
+# Check availability in cycle
+# It's for each single proxy, not the checker
+PROXY_STORE_CHECK_SEC: 3600
+```
+
+### Customization ###
+
+- If you use Docker:
+    - Create a directory such as `/x/config_dir` and put your `config.yml` in it. Then modify the docker-run command like this:
+        ```
+        docker run -itd --name fpserver --net="host" -v "/x/config_dir":"/fps-config" karmenzind/fp-server:stable
+        ```
+    - External `config.yml` doesn't need to contain all config items. For example, it can be:
+        ```
+        PROXY_STORE_NUM: 100
+        LOG:
+            level: 'info'
+        PROXY_STORE_CHECK_SEC: 7200
+        ```
+        And other items will be default values.
+    - If you need to set a log file, **don't** modify `LOG-dir` in `config.yml`. Instead create a directory for log file such as `/x/log_dir` and change the docker-run command like:
+        ```
+        docker run -itd --name fpserver --net="host" -v "/x/config_dir":"/fps_config" -v "/x/log_dir":"/fp_server/logs" karmenzind/fp-server:stable
+        ```
+- If you manually deploy the project:
+    - Modify the internal config file: `src/config/common.py`
 
 ## Source webs ##
 
 Growing……
+
+If you knew good free-proxy websites, please tell me and I will add them to this project.
 
 Supporting:
 - [x] [西刺代理](http://www.xicidaili.com)
@@ -177,7 +237,6 @@ Known bugs:
 
 *   Divide log module
 *   More detailed api
-*   Bring in Docker
 *   Web frontend via bootstrap
 *   Add user-agent pool
 

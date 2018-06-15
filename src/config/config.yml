@@ -1,0 +1,26 @@
+# server's http port
+HTTP_PORT: 12345
+
+# redirect output to console other than log file
+CONSOLE_OUTPUT: 1
+
+# Log
+# dir and filename requires `CONSOLE_OUTPUT: 0`
+LOG: 
+  level: 'debug'
+  dir: './logs'
+  filename: 'fp-server.log'
+
+# redis database
+REDIS:
+  host: '127.0.0.1'
+  port: 6379
+  db: 0
+
+# stop crawling new proxies
+# after stored this many proxies
+PROXY_STORE_NUM: 500
+
+# Check availability in cycle
+# It's for each single proxy, not the checker
+PROXY_STORE_CHECK_SEC: 3600

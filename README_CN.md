@@ -14,37 +14,57 @@
 - Archlinux; Python-3.6.5
 - Debian(wsl); Python-3.5.3
 
-**Windows暂不支持……**
+**代码暂不支持直接在Windows上运行，Windows用户请[选择Docker方式部署](#使用docker)或使用WSL……**
 
 ## 目录 ##
 
 <!-- vim-markdown-toc GFM -->
 
 * [安装使用](#安装使用)
+    * [使用Docker](#使用docker)
+    * [手动安装部署 ###](#手动安装部署-)
 * [Web接口](#web接口)
     * [获取代理](#获取代理)
     * [查看状态](#查看状态)
 * [配置](#配置)
+    * [介绍](#介绍)
+    * [修改](#修改)
 * [代理来源](#代理来源)
 * [问题和需求](#问题和需求)
-* [TODOs](#todos)
 
 <!-- vim-markdown-toc -->
 
 ## 安装使用 ##
 
-1. 安装基础软件 `python>=3.5`(我用的是Python-3.6.5) `redis`
+首先安装[Redis数据库](https://redis.io/)，然后选取下列方式之一安装部署本项目。
+安装完成之后，通过[API](#web接口)获取代理
+
+### 使用Docker ###
+
+**最简单**的安装部署方式是使用[Docker](https://www.docker.com/)，安装Docker后执行如下命令：
+```bash
+# 下载镜像
+docker pull karmenzind/fp-server:stable
+# 启动容器
+docker run -itd --name fpserver --net="host" karmenzind/fp-server:stable
+# 检查容器内部输出
+docker logs -f fpserver
+```
+更改配置请查看[下文](#配置)
+
+### 手动安装部署 ### 
+
+1. 安装`python>=3.5`(我用的是Python-3.6.5)
 2. 克隆这个项目 
 3. 安装所需的Python包
 ```bash
 pip install -r requirements.txt
 ```
-4. 阅读[配置介绍](#config)，根据需要修改
+4. 阅读[配置介绍](#配置)，根据需要修改
 5. 启动服务
 ```bash
 python ./src/main.py
 ```
-6. 通过[API](#web接口)获取代理
 
 ## Web接口 ##
 
@@ -53,9 +73,7 @@ python ./src/main.py
 {
     "code": 0,
     "msg": "ok",
-    "data": {
-        ...
-    }
+    "data": {}
 }
 ```
 
@@ -98,8 +116,7 @@ anonymity               | O                     | 匿名效果。可选:`transpa
                 "scheme": "HTTP",
                 "url": "http://xxx.xxx.xxx.xx:xxxx",
                 "anonymity": "transparent"
-            },
-            ...
+            }
             ]
         }
     }
@@ -127,23 +144,64 @@ GET /api/status/
 
 ## 配置 ##
 
-配置文件路径: `{repo}/src/config/common.py`
+### 介绍
 
-- `HTTP_PORT`   服务运行端口 (默认: 12345)
-- `CONSOLE_OUTPUT`  设置为1，日志输出到终端，不写入文件 (默认: 1)
-- `LOG`  日志设置:
-    - `level` `dir` 和 `filename`, 写入文件生效前提为`CONSOLE_OUTPUT = 0`
-- `REDIS`  Redis数据库配置
-    - `host` `port` `db`
-- `PROXY_STORE_NUM` 本地要存储的代理总数
-    - 超过这个数目后，服务会停止爬取新的代理
-    - 根据你的需要来合理设置
-- `PROXY_STORE_CHECK_SEC` 设定周期，定时检查每个代理可用性
-    - 每个代理都会存储自己的最后检查时间，动态检查
+配置文件采用YAML格式，定义和默认值如下：
+
+```yaml
+# 服务运行端口
+HTTP_PORT: 12345
+
+# 在终端打印输出，不写入文件
+CONSOLE_OUTPUT: 1
+
+# 日志设置
+# dir和filename生效需要先设置CONSOLE_OUTPUT为0
+LOG: 
+  level: 'debug'
+  dir: './logs'
+  filename: 'fp-server.log'
+
+REDIS:
+  host: '127.0.0.1'
+  port: 6379
+  db: 0
+
+# 本地要存储的代理总数
+# 超过这个数目后，服务会停止爬取新的代理
+# 根据你的需要来合理设置
+PROXY_STORE_NUM: 500
+
+# 设定周期，定时检查每个代理可用性
+# 每个代理都会存储自己的最后检查时间，动态检查
+PROXY_STORE_CHECK_SEC: 3600
+```
+
+### 修改
+
+- 使用Docker部署:
+    - 在本地新建目录，如`/x/config_dir`，在其中新建配置文件`config.yml`，然后将docker-run命令修改如下：
+        ```
+        docker run -itd --name fpserver --net="host" -v "/x/config_dir":"/fps-config" karmenzind/fp-server:stable
+        ```
+    - 外部`config.yml`的内容可以为上述配置项的子集，例如：
+        ```
+        PROXY_STORE_NUM: 100
+        LOG:
+            level: 'info'
+        PROXY_STORE_CHECK_SEC: 7200
+        ```
+        其他配置项会自动采用内部配置
+    - 如果要指定日志文件，**不要**修改`config.yml`中的`LOG-dir`。在本地新建日志目录，如`/x/log_dir`，结合上一步，修改docker-run命令为：
+        ```
+        docker run -itd --name fpserver --net="host" -v "/x/config_dir":"/fps_config" -v "/x/log_dir":"/fp_server/logs" karmenzind/fp-server:stable
+        ```
+- 手动方式部署：
+    - 直接修改项目内文件: `src/config/config.yml`
 
 ## 代理来源 ##
 
-这个列表还在增加
+这个列表还在增加，欢迎贡献新的代理网站给我，我会将它加进项目里
 
 目前支持:
 - [x] [西刺代理](http://www.xicidaili.com)
@@ -159,16 +217,4 @@ GET /api/status/
 欢迎大家反馈，这样我才有动力维护
 
 如果有Bug或者建议，请直接[创建issue](https://github.com/Karmenzind/fp-server/issues/new) 
-
-known bugs
-*   Many wierd `None`... thought relavant to insecure thread
-*   Block while using Tornado-4.5.3
-
-## TODOs ##
-
-*   Divide log module
-*   More detailed api
-*   Bring in Docker
-*   Web frontend via bootstrap
-*   Add user-agent pool
 

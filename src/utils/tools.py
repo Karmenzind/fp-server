@@ -2,6 +2,7 @@
 
 
 import uuid
+import yaml
 
 
 def get_uuid1():
@@ -32,3 +33,31 @@ def get_uuid5(str_in):
     """
     s = uuid.uuid5(uuid.NAMESPACE_DNS, str_in)
     return str(s)
+
+
+def parse_yaml(path):
+    with open(path) as f:
+        return yaml.load(f)
+
+
+def recursive_update(old, new):
+    """
+    :old: to be updated
+    :new:
+    """
+    for key, value in new.items():
+        if key in old:
+            old_value = old[key]
+            # if type(old_value) != type(value):
+            #     raise AssertionError("New value's type must"
+            #                          "be the same as the old's")
+            if isinstance(value, dict):
+                old[key].update(value)
+            elif isinstance(value, list):
+                old[key] = old_value + value
+            elif isinstance(value, tuple):
+                old[key] = tuple(list(old_value) + list(value))
+            else:
+                old[key] = value
+        else:
+            old[key] = value
