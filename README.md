@@ -13,9 +13,9 @@ Features:
 
 
 免费代理服务器，基于[Tornado](http://www.tornadoweb.org/en/stable/#)和[Scrapy](https://scrapy.org/)，在本地搭建属于自己的代理池
-- 持续爬取新的免费代理
-- 易用的HTTP api
-- 异步，支持高并发
+- 持续爬取新的免费代理，检测可用后存入本地数据库
+- 完全异步，支持高并发（从免费的前提下衡量……）
+- 易用的HTTP API
 - 周期性检测代理可用性，自动更新
 
 [**查看中文文档\_(:ι」∠)\_**](./README_CN.md) 
@@ -40,6 +40,7 @@ And it **cannot directly run on windows**. Windows users may try [using Docker](
     * [Introduction](#introduction)
     * [Customization](#customization)
 * [Source webs](#source-webs)
+* [FAQ](#faq)
 * [Bugs and feature requests](#bugs-and-feature-requests)
 * [TODOs](#todos)
 
@@ -224,13 +225,22 @@ Supporting:
 - [ ] [89免费代理](http://www.89ip.cn/)
 - [ ] [66免费代理](http://www.66ip.cn/)
 
+## FAQ##
+
+-   How about the availability and quality of the proxies?
+    Before storing new proxy, fp-server will check its availability, anonymity and speed based on your local network. So, feel free to use the crawled proxies.
+-   How many `PROXY_STORE_NUM` should I set? Is there any limitation?
+    You should set it depends on your real requirement. If your project is a normal spider, then 300-500 will be fair enough. I haven't set any limitation for now. After stored 10000 available proxies, I stopped testing. The upper limit is relevant to source websites. I will add more websites if more people use this project.
+-   How to use it in my project?
+    I'm gonna write some snippets, which can be directly copied to your project, for several popular frameworks. So if you can wait for me……
+
 ## Bugs and feature requests ##
 
 I need your feedback to make it better.<br>
 Please [create an issue](https://github.com/Karmenzind/fp-server/issues/new) for any problems or advice.
 
 Known bugs:
-*   Many wierd `None`... thought relavant to insecure thread
+*   Many wierd `None`…… thought because of insecure thread
 *   Block while using Tornado-4.5.3
 
 ## TODOs ##
