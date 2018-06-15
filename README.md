@@ -225,7 +225,7 @@ Supporting:
 - [ ] [89免费代理](http://www.89ip.cn/)
 - [ ] [66免费代理](http://www.66ip.cn/)
 
-## FAQ##
+## FAQ ##
 
 -   How about the availability and quality of the proxies?
     Before storing new proxy, fp-server will check its availability, anonymity and speed based on your local network. So, feel free to use the crawled proxies.
