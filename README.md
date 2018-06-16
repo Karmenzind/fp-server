@@ -227,12 +227,18 @@ Supporting:
 
 ## FAQ ##
 
--   How about the availability and quality of the proxies?
+-   **_How about the availability and quality of the proxies?_**
+
     Before storing new proxy, fp-server will check its availability, anonymity and speed based on your local network. So, feel free to use the crawled proxies.
--   How many `PROXY_STORE_NUM` should I set? Is there any limitation?
+
+-   **_How many `PROXY_STORE_NUM` should I set? Is there any limitation?_**
+
     You should set it depends on your real requirement. If your project is a normal spider, then 300-500 will be fair enough. I haven't set any limitation for now. After stored 10000 available proxies, I stopped testing. The upper limit is relevant to source websites. I will add more websites if more people use this project.
--   How to use it in my project?
+
+-   **_How to use it in my project?_**
+
     I'm gonna write some snippets, which can be directly copied to your project, for several popular frameworks. So if you can wait for me……
+
 
 ## Bugs and feature requests ##
 
