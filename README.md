@@ -42,7 +42,7 @@ And it **cannot directly run on windows**. Windows users may try [using Docker](
 * [Source webs](#source-webs)
 * [FAQ](#faq)
 * [Bugs and feature requests](#bugs-and-feature-requests)
-* [TODOs](#todos)
+* [TODOs and ideas](#todos-and-ideas)
 
 <!-- vim-markdown-toc -->
 
@@ -243,10 +243,15 @@ Known bugs:
 *   Many wierd `None`…… thought because of insecure thread
 *   Block while using Tornado-4.5.3
 
-## TODOs ##
+Potential:
+*   Server may crash when it stored too many proxies as well as the check period is too short
+
+## TODOs and ideas ##
 
 *   Divide log module
 *   More detailed api
 *   Web frontend via bootstrap
 *   Add user-agent pool
+*   the checker's scheduler: 
+    -   Periodically calculating the average speed of checking request, then reassign the checker based on this average and the quantity of stored proxies.
 
