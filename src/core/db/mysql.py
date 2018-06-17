@@ -1,13 +1,7 @@
 # -*- coding:utf-8 -*-
 
-"""
-MySQL async操作接口
+from tornado_mysql import cursors, pools
 
-Date:   2017/05/08
-Update: 2017/12/17  1. 修改配置参数user为username;
-"""
-
-from tornado_mysql import pools, cursors
 from utils import log as logger
 
 pools.DEBUG = True
@@ -48,6 +42,7 @@ async def exec_cmd(sql):
     logger.debug('sql:', sql)
     cursor = await CONN_POOL.execute(sql)
     result = cursor.fetchall()
+
     return result
 
 

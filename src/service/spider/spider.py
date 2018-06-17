@@ -2,27 +2,23 @@
 
 import time
 
+from scrapy.crawler import Crawler
+from tornado.ioloop import IOLoop
+
 import config
-# from initial import crawler_runner
 from core.crawler import CRAWLER_RUNNER as crawler_runner
+from core.db.redis import aioredis_pool, pyredis_pool
 from proxy_spider.spiders.checker import CheckerSpider
-# from proxy_spider.spiders.ihuan import IhuanSpider
 from proxy_spider.spiders.kuaidaili import KuaidailiSpider
 from proxy_spider.spiders.xicidaili import XicidailiSpider
 from proxy_spider.spiders.yundaili import YundailiSpider
 from utils import log as logger
-# from utils.db import aioredis_pool, pyredis_pool
-from utils.db import pyredis_pool
-from core.db.redis import REDIS_CONN_POOL as aioredis_pool
 from utils.proxy import key_prefix as proxy_key_prefix
 from utils.spider import build_key, key_prefix  # , updated_crawler_settings
-# from scrapy.utils.log import configure_logging
-
-from scrapy.crawler import Crawler
-from tornado.ioloop import IOLoop
 
 
 class SpiderServer:
+    # TODO: move these to config file?
     enabled_crawlers = {
         'crawler': (
             XicidailiSpider,
@@ -71,9 +67,14 @@ class SpiderServer:
         return results if keys else results[0]
 
     async def all_status(self):
+        """
+        get all status about spiders
+        """
         keys = await self.cli.keys('%s*' % key_prefix)
+
         if keys:
             return await self.check(keys=keys, detail=True)
+
         return []
 
     async def register_status(self, key):
@@ -107,7 +108,7 @@ class SpiderServer:
     def callback_unregister_status(self, _, st, key, *args, **kw):
         """
         as callback of crawling
-        Twisted doesn't support aioredis
+        * Twisted doesn't support aioredis
 
         :param _: preserved for fired deffer
         :param st: start time
@@ -148,7 +149,8 @@ class SpiderServer:
             st = await self.register_status(key)
             # TODO: specify settings
             logger.info('Started %s at %s. Key: %s.' % (st, spider, key))
-            # self.run_crawler(spider, st, key)
+
+            # build a new thread
             IOLoop.current().run_in_executor(None,
                                              self.run_crawler,
                                              spider,
@@ -159,7 +161,14 @@ class SpiderServer:
         return started
 
     def run_crawler(self, spider, st, key):
+        """ run a crawler, then unregister it
+        * moved to another thread
+
+        :st: start time
+        :key: key in redis
+        """
         crawler = self.get_crawler(spider)
+        logger.info('Got crawler: %s' % crawler)
         d = crawler_runner.crawl(crawler)
         # unregister
         d.addBoth(self.callback_unregister_status, st=st, key=key)
@@ -173,7 +182,7 @@ class SpiderServer:
         """
         settings = crawler_runner.settings
 
-        # FIX it!
+        # FIXME !!!
         # conf = {}
         # log_file = crawler_runner.settings.get('LOG_FILE')
         # if log_file:
@@ -185,6 +194,7 @@ class SpiderServer:
         #                           ).format(spider=spider.name)
         #     settings = updated_crawler_settings(settings, conf)
         # configure_logging(settings)
+
         return Crawler(spider, settings)
 
 

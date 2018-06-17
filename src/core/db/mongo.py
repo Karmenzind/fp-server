@@ -1,25 +1,14 @@
 # -*- coding:utf-8 -*-
 
-"""
-mongodb async操作接口
-
-Date:   2017/05/08
-Update:
-        2017/07/24  1、增加 find_one_and_update 接口;
-                    2、增加 find_one_and_delete 接口;
-        2017/08/16  1、增加数据库连接鉴权;
-        2017/12/12  1、初始化参数去除port;
-                    2、修改基类名DBBase为MongoDBBase;
-        2017/12/29  1、修复bug: 处理查询条件里_id的各种类型;
-"""
 
 import copy
+from urllib.parse import quote_plus
 
 import motor
 from bson.objectid import ObjectId
-from urllib.parse import quote_plus
 
-from utils import log as logger, time_ext
+from utils import log as logger
+from utils import time_ext
 
 MONGO_CONN = None
 DELETE_FLAG = 'delete'  # True 已经删除，False 或者没有该字段表示没有删除
@@ -28,10 +17,13 @@ DELETE_FLAG = 'delete'  # True 已经删除，False 或者没有该字段表示�
 def initMongodb(host='127.0.0.1:27017', username='', password='', dbname='admin'):
     """ 初始化mongodb连接
     """
+
     if username and password:
         uri = 'mongodb://{username}:{password}@{host}/{dbname}'.format(username=quote_plus(username),
-                                                                       password=quote_plus(password),
-                                                                       host=quote_plus(host),
+                                                                       password=quote_plus(
+                                                                           password),
+                                                                       host=quote_plus(
+                                                                           host),
                                                                        dbname=dbname)
     else:
         uri = "mongodb://{host}/{dbname}".format(host=host, dbname=dbname)
@@ -62,6 +54,7 @@ class MongoDBBase(object):
         @param limit 返回数据条数
         * NOTE: 必须传入limit，否则默认返回数据条数可能因为pymongo的默认值而改变
         """
+
         if '_id' in spec:
             spec['_id'] = self._convert_id_object(spec['_id'])
         spec[DELETE_FLAG] = {'$ne': True}
@@ -70,6 +63,7 @@ class MongoDBBase(object):
         async for item in cursor:
             item['_id'] = str(item['_id'])
             datas.append(item)
+
         return datas
 
     async def find_one(self, spec={}, fields=None, sort=[]):
@@ -79,6 +73,7 @@ class MongoDBBase(object):
         @param sort 排序规则
         """
         data = await self.get_list(spec, fields, sort, limit=1)
+
         if data:
             return data[0]
         else:
@@ -91,6 +86,7 @@ class MongoDBBase(object):
         """
         spec[DELETE_FLAG] = {'$ne': True}
         n = await self.dao.count(spec)
+
         return n
 
     async def insert(self, docs_data):
@@ -102,15 +98,18 @@ class MongoDBBase(object):
         ret_ids = []
         is_one = False
         create_time = time_ext.get_utc_time()
+
         if not isinstance(docs, list):
             docs = [docs]
             is_one = True
+
         for doc in docs:
             doc['_id'] = ObjectId()
             doc['create_time'] = create_time
             doc['modify_time'] = create_time
             ret_ids.append(str(doc['_id']))
         self.dao.insert_many(docs)
+
         if is_one:
             return ret_ids[0]
         else:
@@ -125,16 +124,20 @@ class MongoDBBase(object):
         @return modified_count 更新数据条数
         """
         spec[DELETE_FLAG] = {'$ne': True}
+
         if '_id' in spec:
             spec['_id'] = self._convert_id_object(spec['_id'])
         set_fields = update_fields.get('$set', {})
         set_fields['modify_time'] = time_ext.get_utc_time()
         update_fields['$set'] = set_fields
+
         if not multi:
             result = await self.dao.update_one(spec, update_fields, upsert=upsert)
+
             return result.modified_count
         else:
             result = await self.dao.update_many(spec, update_fields, upsert=upsert)
+
             return result.modified_count
 
     async def delete(self, spec):
@@ -143,10 +146,12 @@ class MongoDBBase(object):
         @return delete_count 删除数据的条数
         """
         spec[DELETE_FLAG] = {'$ne': True}
+
         if '_id' in spec:
             spec['_id'] = self._convert_id_object(spec['_id'])
         update_fields = {'$set': {DELETE_FLAG: True}}
         delete_count = await self.update(spec, update_fields, multi=True)
+
         return delete_count
 
     async def remove(self, spec, multi=False):
@@ -155,11 +160,14 @@ class MongoDBBase(object):
         @param multi 是否全部删除
         @return deleted_count 删除数据的条数
         """
+
         if not multi:
             result = await self.dao.delete_one(spec)
+
             return result.deleted_count
         else:
             result = await self.dao.delete_many(spec)
+
             return result.deleted_count
 
     async def distinct(self, key, spec={}):
@@ -169,9 +177,11 @@ class MongoDBBase(object):
         @return result 过滤结果list
         """
         spec[DELETE_FLAG] = {'$ne': True}
+
         if '_id' in spec:
             spec['_id'] = self._convert_id_object(spec['_id'])
         result = await self.dao.distinct(key, spec)
+
         return result
 
     async def find_one_and_update(self, spec, update_fields, upsert=False, return_document=False, fields=None):
@@ -184,6 +194,7 @@ class MongoDBBase(object):
         @return result 修改之前或之后的数据
         """
         spec[DELETE_FLAG] = {'$ne': True}
+
         if '_id' in spec:
             spec['_id'] = self._convert_id_object(spec['_id'])
         set_fields = update_fields.get('$set', {})
@@ -191,8 +202,10 @@ class MongoDBBase(object):
         update_fields['$set'] = set_fields
         result = await self.dao.find_one_and_update(spec, update_fields, projection=fields, upsert=upsert,
                                                     return_document=return_document)
+
         if result and '_id' in result:
             result['_id'] = str(result['_id'])
+
         return result
 
     async def find_one_and_delete(self, spec={}, fields=None):
@@ -202,16 +215,20 @@ class MongoDBBase(object):
         @param result 删除之前的数据
         """
         spec[DELETE_FLAG] = {'$ne': True}
+
         if '_id' in spec:
             spec['_id'] = self._convert_id_object(spec['_id'])
         result = await self.dao.find_one_and_delete(spec, projection=fields)
+
         if result and '_id' in result:
             result['_id'] = str(result['_id'])
+
         return result
 
     def _convert_id_object(self, origin):
         """ 将字符串的_id转换成ObjectId类型
         """
+
         if isinstance(origin, str):
             return ObjectId(origin)
         elif isinstance(origin, (list, set)):
@@ -219,6 +236,7 @@ class MongoDBBase(object):
         elif isinstance(origin, dict):
             for key, value in origin.items():
                 origin[key] = self._convert_id_object(value)
+
         return origin
 
 

@@ -37,7 +37,7 @@ class BlockingProxyServer(_ProxyServerBase):
     """
 
     def __init__(self):
-        from utils.db import pyredis_pool
+        from core.db.redis import pyredis_pool
         self.cli = pyredis_pool.acquire()
         self.cli.hmset_dict = self.hmset_dict
 
@@ -121,7 +121,7 @@ class ProxyServer(_ProxyServerBase):
 
     def __init__(self):
         # from utils.db import aioredis_pool
-        from core.db.redis import REDIS_CONN_POOL as aioredis_pool
+        from core.db.redis import aioredis_pool
         self.cli = aioredis_pool
 
     async def get_all_status(self):

@@ -1,14 +1,10 @@
 # -*- coding:utf-8 -*-
 
-"""
-中间件 基类
-Date:   2017/8/8
-Update: None
-"""
+# TODO: change name to process_*
 
 
 class Middleware:
-    """ 中间件
+    """ Base class of for middlewares
     """
 
     async def prepare(self, request):

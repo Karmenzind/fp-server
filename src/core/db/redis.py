@@ -4,33 +4,80 @@ import aioredis
 
 from utils import log as logger
 
-__all__ = ('initRedisPool', 'RedisDBBase')
-
-REDIS_CONN_POOL = None
+aioredis_pool = None
 
 
-async def initRedisPool():
+def get_redis_config():
+    """parse redis config
+    :returns: dict
+    """
     import config
-    _config = getattr(config, 'REDIS', {})
-    host = _config.get('host', 'localhost')
-    port = _config.get('port', 6379)
-    db = _config.get('db', 0)
-    url = 'redis://%s:%s' % (host, port)
-    global REDIS_CONN_POOL
-    REDIS_CONN_POOL = await aioredis.create_redis_pool(url,
-                                                       db=db,
-                                                       encoding='utf-8')
-    logger.info('Initialized aioredis pool: %s.' % REDIS_CONN_POOL)
+    redis_conf = getattr(config, 'REDIS', {})
+    host = redis_conf.get('host', 'localhost')
+    port = redis_conf.get('port', 6379)
+
+    url = 'redis://%s:%s' % (host, port)  # FIXME
+    result = dict(
+        host=host,
+        port=port,
+        url=url,
+        address=url,
+        password=redis_conf.get('password') or None,
+        db=redis_conf.get('db', 0),
+        encoding=redis_conf.get('encoding', 'utf-8'),
+        database=redis_conf.get('db', 0),
+    )
+
+    return result
+
+
+redis_config = get_redis_config()
+
+
+async def init_aioredis_pool():
+    keys = ('address', 'db', 'password', 'encoding')
+    conf = {k: v for k, v in redis_config.items() if k in keys}
+    global aioredis_pool
+    aioredis_pool = await aioredis.create_redis_pool(**conf)
+    logger.info('Initialized aioredis pool: %s.' % aioredis_pool)
+
+
+def init_pyredis_pool():
+    from pyredis import Pool
+    keys = ('host', 'port', 'database', 'password', 'encoding')
+    conf = {k: v for k, v in redis_config.items() if k in keys}
+    pool = Pool(**conf)
+    logger.info('Initialized pyredis pool: %s' % pool)
+
+    return pool
+
+
+pyredis_pool = init_pyredis_pool()
+
+
+def initial_clean():
+    from utils.spider import key_prefix
+    cli = pyredis_pool.acquire()
+
+    for key in cli.keys('%s*' % key_prefix):
+        cli.delete(key)
+
+
+initial_clean()
 
 
 class RedisDBBase:
 
-    cli = REDIS_CONN_POOL
+    cli = aioredis_pool
 
     async def exec_cmd(self, *args, **kwargs):
-        result = await REDIS_CONN_POOL.execute(*args, **kwargs)
+        result = await aioredis_pool.execute(*args, **kwargs)
         logger.debug('cmd:', *args, 'result:', result, caller=self)
+
         return result
+
+
+__all__ = (init_aioredis_pool, RedisDBBase, pyredis_pool, aioredis_pool)
 
 #######################################################################
 #                              snippits                               #

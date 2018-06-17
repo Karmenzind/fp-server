@@ -156,11 +156,11 @@ class TornadoContext(object):
             logger.info('mongodb config:', self.mongo_config, caller=self)
             initMongodb(**self.mongo_config)
         if self.redis_config:
-            from core.db.redis import initRedisPool
+            from core.db.redis import init_aioredis_pool
             logger.info('redis config:', self.redis_config, caller=self)
             # self.loop.run_until_complete(initRedisPool(**self.redis_config))
             # IOLoop.current().add_callback(initRedisPool, **self.redis_config)
-            IOLoop.current().run_sync(initRedisPool)
+            IOLoop.current().run_sync(init_aioredis_pool)
         logger.info('init db instance done <<<', caller=self)
 
     def _init_middlewares(self):

@@ -10,7 +10,7 @@ from utils import log as logger
 
 
 class AsyncHttpRequests(object):
-    """ HTTP异步请求封装
+    """ a wrapper of async http request
     """
 
     @classmethod

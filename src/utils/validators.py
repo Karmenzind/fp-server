@@ -1,24 +1,22 @@
 # -*- coding:utf-8 -*-
 
-"""
-validator 字段校验
-Date:   2018/03/21
-Update: None
-"""
 
 import json
 
-from utils import time_ext
 from core import exceptions
+from utils import time_ext
 
 
 def _field(data, field, required):
     if field:
         data = data or {}
+
         if not isinstance(data, dict):
             raise exceptions.SystemError()
+
         if required and field not in data:
             raise exceptions.ValidationError('{field}必填'.format(field=field))
+
         return data.get(field)
     else:
         return data
@@ -31,10 +29,13 @@ def bool_field(data, field=None, required=True):
     @param required 是否data里必须存在field字段，如果字段不存在且required为False，返回None
     """
     field_data = _field(data, field, required)
+
     if str(field_data).lower() == 'true':
         return True
+
     if str(field_data).lower() == 'false':
         return False
+
     if not required:
         return None
     raise exceptions.ValidationError('{field}是bool类型'.format(field=field))
@@ -47,6 +48,7 @@ def int_field(data, field=None, required=True):
     @param required 是否data里必须存在field字段，如果字段不存在且required为False，返回None
     """
     field_data = _field(data, field, required)
+
     if not field_data and not required:
         return None
     try:
@@ -62,6 +64,7 @@ def float_field(data, field=None, required=True):
     @param required 是否data里必须存在field字段，如果字段不存在且required为False，返回None
     """
     field_data = _field(data, field, required)
+
     if not field_data and not required:
         return None
     try:
@@ -77,8 +80,10 @@ def string_field(data, field=None, required=True):
     @param required 是否data里必须存在field字段，如果字段不存在且required为False，返回None
     """
     field_data = _field(data, field, required)
+
     if not field_data and not required:
         return None
+
     return str(field_data)
 
 
@@ -89,15 +94,20 @@ def list_field(data, field=None, required=True):
     @param required 是否data里必须存在field字段，如果字段不存在且required为False，返回None
     """
     field_data = _field(data, field, required)
+
     if not field_data and not required:
         return None
+
     if isinstance(field_data, str):
         try:
             field_data = json.loads(field_data)
         except:
-            raise exceptions.ValidationError('{field}是list类型'.format(field=field))
+            raise exceptions.ValidationError(
+                '{field}是list类型'.format(field=field))
+
     if not isinstance(field_data, (list, set, tuple)):
         raise exceptions.ValidationError('{field}是list类型'.format(field=field))
+
     return list(field_data)
 
 
@@ -108,15 +118,20 @@ def dict_field(data, field=None, required=True):
     @param required 是否data里必须存在field字段，如果字段不存在且required为False，返回None
     """
     field_data = _field(data, field, required)
+
     if not field_data and not required:
         return None
+
     if isinstance(field_data, str):
         try:
             field_data = json.loads(field_data)
         except:
-            raise exceptions.ValidationError('{field}是dict类型'.format(field=field))
+            raise exceptions.ValidationError(
+                '{field}是dict类型'.format(field=field))
+
     if not isinstance(field_data, dict):
         raise exceptions.ValidationError('{field}是dict类型'.format(field=field))
+
     return field_data
 
 
