@@ -209,10 +209,10 @@ PROXY_STORE_CHECK_SEC: 3600
 - [x] [西刺代理](http://www.xicidaili.com)
 - [x] [快代理](http://www.kuaidaili.com)
 - [x] [云代理](http://www.ip3366.net) (partial)
+- [x] [66免费代理](http://www.66ip.cn/)
 - [ ] [小幻代理](https://ip.ihuan.me) (figuring)
 - [ ] [万能代理](http://wndaili.cn)
 - [ ] [89免费代理](http://www.89ip.cn/)
-- [ ] [66免费代理](http://www.66ip.cn/)
 - [ ] [无忧代理](http://www.data5u.com/free/index.shtml)
 
 ## FAQ ##
