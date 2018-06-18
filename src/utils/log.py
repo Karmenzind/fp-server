@@ -4,9 +4,9 @@
 日志打印
 """
 
+import logging
 import os
 import sys
-import logging
 
 from tornado import log
 from tornado.options import options
@@ -18,17 +18,20 @@ def initLogger(log_level='debug', log_path=None, logfile_name=None):
     @param log_path 日志输出路径
     @param logfile_name 日志文件名
     """
+
     if log_level == 'info':
         options.logging = 'info'
     else:
         options.logging = 'debug'
     logger = logging.getLogger()
+
     if logfile_name:
         if not os.path.isdir(log_path):
             os.makedirs(log_path)
         logfile = os.path.join(log_path, logfile_name)
         print('init logger ...:', logfile)
-        handler = logging.handlers.TimedRotatingFileHandler(logfile, 'midnight')
+        handler = logging.handlers.TimedRotatingFileHandler(
+            logfile, 'midnight')
     else:
         handler = logging.StreamHandler()
     fmt_str = '%(levelname)1.1s [%(asctime)s] %(message)s'
@@ -64,20 +67,24 @@ exception = error
 
 def _log(msg_header, *args, **kwargs):
     _log_msg = msg_header
+
     for l in args:
-        if type(l) == tuple :
+        if type(l) == tuple:
             ps = str(l)
         else:
             try:
                 ps = '%r' % l
             except:
                 ps = str(l)
+
         if type(l) == str:
             _log_msg += ps[1:-1] + ' '
         else:
             _log_msg += ps + ' '
+
     if len(kwargs) > 0:
         _log_msg += str(kwargs)
+
     return _log_msg
 
 
@@ -93,17 +100,21 @@ def _log_msg_header(*args, **kwargs):
     session_id = '-'
     try:
         _caller = kwargs.get('caller', None)
+
         if _caller:
             if not hasattr(_caller, '__name__'):
                 _caller = _caller.__class__
             cls_name = _caller.__name__
             del kwargs['caller']
         session_id = kwargs.get('session_id', '-')
+
         if session_id:
             del kwargs['session_id']
     except:
         pass
     finally:
-        msg_header = '[{cls_name}.{func_name}] [{session_id}] '.format(cls_name=cls_name, func_name=func_name,
+        msg_header = '[{cls_name}.{func_name}] [{session_id}] '.format(cls_name=cls_name,
+                                                                       func_name=func_name,
                                                                        session_id=session_id)
+
         return msg_header, kwargs

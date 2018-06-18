@@ -10,7 +10,7 @@ MSG_OK = {'code': 0, 'msg': 'OK'}
 
 # common errors
 ERR_MSG_INVALID = {'code': 400, 'msg': 'Failed'}
-ERR_MSG_WRONG_PARAMS = {'code': 400, 'msg': 'Check the params you input'}
+ERR_MSG_WRONG_PARAMS = {'code': 400, 'msg': 'Check the params that you input'}
 ERR_MSG_PERMISSION_ERROR = {'code': 401, 'msg': 'Authentication failed'}
 ERR_MSG_BODY_ERROR = {'code': 411, 'msg': 'Invalid body format'}
 ERR_MSG_SYSTEM_ERROR = {'code': 500, 'msg': 'Internal error'}
@@ -40,6 +40,11 @@ class CustomException(Exception):
 
 class ValidationError(CustomException):
     default_msg = 'Bad Request'
+    default_code = 400
+
+
+class ParamError(CustomException):
+    default_msg = 'Param Error'
     default_code = 400
 
 

@@ -225,6 +225,7 @@ Supporting:
 - [ ] [万能代理](http://wndaili.cn)
 - [ ] [89免费代理](http://www.89ip.cn/)
 - [ ] [66免费代理](http://www.66ip.cn/)
+- [ ] [无忧代理](http://www.data5u.com/free/index.shtml)
 
 ## FAQ ##
 

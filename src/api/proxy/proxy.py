@@ -6,11 +6,11 @@ API for proxy
 """
 
 
-from service.proxy.proxy import proxy_srv
-from utils.routes import route
-from utils import log as logger
 from core import exceptions
 from core.web import WebHandler
+from service.proxy.proxy import proxy_srv
+from utils import log as logger
+from utils.routes import route
 
 
 def return_developing():
@@ -29,6 +29,10 @@ class GetProxyHandler(WebHandler):
         """
         count = int(self.get_param('count', 1))
         scheme = self.get_param('scheme')
+
+        if scheme:
+            scheme = scheme.lower()
+
         anonymity = self.get_param('anonymity')
         spec = dict(count=count, scheme=scheme, anonymity=anonymity)
         items = await proxy_srv.query(spec)
