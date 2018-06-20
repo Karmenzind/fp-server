@@ -227,7 +227,7 @@ PROXY_STORE_CHECK_SEC: 3600
 
 -   怎么把它用到我的项目里？
 
-    我后面会针对常用爬虫框架写几个代码片段，直接复制粘贴就可以使用。如果你不着急，就等我……
+    我写了一个[可以直接用在Scrapy项目里的middleware](./examples/middleware_for_scrapy.md)。后面有空我会写更多示例代码。
 
 
 ## 问题和需求 ##

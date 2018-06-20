@@ -4,9 +4,9 @@
 import copy
 from urllib.parse import quote_plus
 
-import motor
 from bson.objectid import ObjectId
 
+import motor
 from utils import log as logger
 from utils import time_ext
 
@@ -14,19 +14,20 @@ MONGO_CONN = None
 DELETE_FLAG = 'delete'  # True 已经删除，False 或者没有该字段表示没有删除
 
 
-def initMongodb(host='127.0.0.1:27017', username='', password='', dbname='admin'):
+def initMongodb(host='127.0.0.1:27017',
+                username='',
+                password='',
+                dbname='admin'):
     """ 初始化mongodb连接
     """
 
     if username and password:
-        uri = 'mongodb://{username}:{password}@{host}/{dbname}'.format(username=quote_plus(username),
-                                                                       password=quote_plus(
-                                                                           password),
-                                                                       host=quote_plus(
-                                                                           host),
-                                                                       dbname=dbname)
+        username = quote_plus(username)
+        password = quote_plus(password)
+        host = quote_plus(host)
+        uri = f'mongodb://{username}:{password}@{host}/{dbname}'
     else:
-        uri = "mongodb://{host}/{dbname}".format(host=host, dbname=dbname)
+        uri = f"mongodb://{host}/{dbname}"
     mongo_client = motor.motor_tornado.MotorClient(uri)
     global MONGO_CONN
     MONGO_CONN = mongo_client

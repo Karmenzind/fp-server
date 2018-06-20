@@ -239,8 +239,7 @@ Supporting:
 
 -   **_How to use it in my project?_**
 
-    I'm gonna write some snippets, which can be directly copied to your project, for several popular frameworks. So if you can wait for me……
-
+    I wrote [a middleware for Scrapy](./examples/middleware_for_scrapy.md), which can be directly copied to your project. I will write more snipptes at leisure.
 
 ## Bugs and feature requests ##
 

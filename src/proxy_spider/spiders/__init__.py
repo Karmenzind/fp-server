@@ -4,6 +4,7 @@
 # your spiders.
 import json
 import random
+import re
 import time
 
 from scrapy import Request, exceptions
@@ -17,6 +18,9 @@ from proxy_spider import utils
 from proxy_spider.items import Proxy
 from service.proxy.proxy import blocking_proxy_srv
 from utils.proxy import build_key
+
+IP_PATTERN = re.compile('^(\d+\.){3}\d+$')
+PORT_PATTERN = re.compile('^\d+$')
 
 
 class _BaseSpider(CrawlSpider):
@@ -56,6 +60,14 @@ class _BaseSpider(CrawlSpider):
 
         return result
 
+    def check_format(self, ip, port):
+        """
+        check the format of ip and port
+
+        :return: bool
+        """
+        return bool(IP_PATTERN.match(ip) and PORT_PATTERN.match(port))
+
     def build_check_recipient(self, ip, port, scheme,
                               user=None, password=None):
         """
@@ -64,6 +76,9 @@ class _BaseSpider(CrawlSpider):
 
         :return: Request
         """
+        if not self.check_format(ip, port):
+            self.logger.debug('Wrong format: (%s, %s)' % (ip, port))
+            return {}
 
         if self.complete_condition():
             raise exceptions.CloseSpider('Enough items')
@@ -165,4 +180,5 @@ class _BaseSpider(CrawlSpider):
         return response.xpath('//section[@id="content"]/h1[2]/span/a/text()').get()
 
     def parse_ipduh(self, response):
-        return response.xpath('//table[@id="hm"]/tr/td[contains(text(), "public IP address")]/following-sibling::td/text()').get()
+        return response.xpath(
+            '//table[@id="hm"]/tr/td[contains(text(), "public IP address")]/following-sibling::td/text()').get()
