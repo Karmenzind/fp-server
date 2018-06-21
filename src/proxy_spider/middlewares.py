@@ -5,6 +5,7 @@
 # See documentation in:
 # https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
+import time
 import random
 
 from scrapy import log
@@ -152,3 +153,9 @@ class RandomUserAgentMiddleware:
         if self.user_agents:
             ua = random.choice(self.user_agents)
             request.headers.setdefault(b'User-Agent', ua)
+
+
+class TimerMiddleware:
+
+    def process_request(self, request, spider):
+        request.meta['_start_time'] = time.time()

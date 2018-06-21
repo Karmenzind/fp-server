@@ -247,11 +247,7 @@ I need your feedback to make it better.<br>
 Please [create an issue](https://github.com/Karmenzind/fp-server/issues/new) for any problems or advice.
 
 Known bugs:
-*   Many wierd `None`…… thought because of insecure thread
 *   Block while using Tornado-4.5.3
-
-Potential:
-*   Server may crash when it stored too many proxies as well as the check period is too short
 
 ## TODOs and ideas ##
 

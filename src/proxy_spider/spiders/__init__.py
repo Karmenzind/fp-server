@@ -4,7 +4,6 @@
 # your spiders.
 import json
 import random
-import re
 import time
 
 from scrapy import Request, exceptions
@@ -17,10 +16,7 @@ import config
 from proxy_spider import utils
 from proxy_spider.items import Proxy
 from service.proxy.proxy import blocking_proxy_srv
-from utils.proxy import build_key
-
-IP_PATTERN = re.compile('^(\d+\.){3}\d+$')
-PORT_PATTERN = re.compile('^\d+$')
+from utils.proxy import build_key, valid_format
 
 
 class _BaseSpider(CrawlSpider):
@@ -46,6 +42,7 @@ class _BaseSpider(CrawlSpider):
         _both = [
             ('{scheme}://httpbin.org/ip', self.parse_httpbin),
             ('{scheme}://ipduh.com/anonymity-check/', self.parse_ipduh),
+            ('{scheme}://api.ipify.org/?format=json', self.parse_ipify),
         ]
         _http = [
             ('http://ip-check.info/?lang=en/', self.parse_ipcheck),
@@ -60,14 +57,6 @@ class _BaseSpider(CrawlSpider):
 
         return result
 
-    def check_format(self, ip, port):
-        """
-        check the format of ip and port
-
-        :return: bool
-        """
-        return bool(IP_PATTERN.match(ip) and PORT_PATTERN.match(port))
-
     def build_check_recipient(self, ip, port, scheme,
                               user=None, password=None):
         """
@@ -76,14 +65,16 @@ class _BaseSpider(CrawlSpider):
 
         :return: Request
         """
-        if not self.check_format(ip, port):
-            self.logger.debug('Wrong format: (%s, %s)' % (ip, port))
-            return {}
 
         if self.complete_condition():
             raise exceptions.CloseSpider('Enough items')
 
         spec = dict(ip=ip, port=port, scheme=scheme)
+
+        if not valid_format(spec):
+            self.logger.debug('Wrong format: (%s, %s)' % (ip, port))
+
+            return {}
 
         if self.already_exists(spec):
             self.logger.debug('Dropped duplicated: %s' % spec.values())
@@ -115,10 +106,9 @@ class _BaseSpider(CrawlSpider):
 
         meta = {
             'proxy': proxy_url,
-            'max_retry_times': 3,
+            'max_retry_times': 5,
             'download_timeout': 20,
             '_item_obj': item,
-            '_start_time': time.time(),
             '_response_parser': response_parser,
         }
 
@@ -147,7 +137,7 @@ class _BaseSpider(CrawlSpider):
         try:
             got_ip = parser(response) or ''
         except:
-            self.logger.exception('')
+            self.logger.exception('Failed when parse response.')
 
         if item['ip'] == got_ip.strip():
             item['anonymity'] = 'anonymous'
@@ -182,3 +172,6 @@ class _BaseSpider(CrawlSpider):
     def parse_ipduh(self, response):
         return response.xpath(
             '//table[@id="hm"]/tr/td[contains(text(), "public IP address")]/following-sibling::td/text()').get()
+
+    def parse_ipify(self, response):
+        return json.loads(response.text)['ip']

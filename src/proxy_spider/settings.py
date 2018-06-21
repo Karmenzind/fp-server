@@ -60,6 +60,7 @@ DOWNLOADER_MIDDLEWARES = {
     'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
     'proxy_spider.middlewares.RandomUserAgentMiddleware': 543,
     'proxy_spider.middlewares.PureRedisMiddleware': 745,
+    'proxy_spider.middlewares.TimerMiddleware': 746,
 }
 
 # Enable and configure HTTP caching (disabled by default)

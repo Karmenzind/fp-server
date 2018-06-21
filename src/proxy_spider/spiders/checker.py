@@ -1,7 +1,6 @@
 # coding: utf-8
 from proxy_spider.spiders import _BaseSpider
-from service.proxy.proxy import blocking_proxy_srv
-from utils.spider import need_check
+from utils.proxy import exceed_check_period, valid_format
 
 
 class CheckerSpider(_BaseSpider):
@@ -10,7 +9,6 @@ class CheckerSpider(_BaseSpider):
     """
     name = 'checker'
     # allowed_domains = ['*']
-    srv = blocking_proxy_srv
 
     def start_requests(self):
         keys = self.srv.get_all_keys()
@@ -19,5 +17,10 @@ class CheckerSpider(_BaseSpider):
             data = self.srv.hgetall_dict(key)
             last_check = data.get('last_check', 0)
 
-            if need_check(last_check):
+            if not valid_format(data):
+                self.srv.delete(key, 'Error format %s' % data)
+
+                continue
+
+            if exceed_check_period(last_check):
                 yield self.build_check_request(data)
