@@ -108,3 +108,4 @@ for_todo.md
 ./src/.scrapy
 ./src/launch_spider.py
 .idea/
+config.yml.local

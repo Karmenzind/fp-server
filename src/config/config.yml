@@ -26,3 +26,4 @@ PROXY_STORE_NUM: 500
 # It's for each single proxy, not the checker
 PROXY_STORE_CHECK_SEC: 3600
 
+# vim: ft=yaml

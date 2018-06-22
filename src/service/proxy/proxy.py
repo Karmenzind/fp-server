@@ -13,7 +13,7 @@ from scrapy import Item
 
 from core.db.redis import aioredis_pool, pyredis_pool
 from utils import log as logger
-from utils.proxy import build_key, build_pattern, key_prefix
+from utils.proxy import build_key, build_pattern, key_prefix, valid_format
 
 FAIL_TIMES_MAXIMUM = 5
 
@@ -67,20 +67,22 @@ class BlockingProxyServer(_ProxyServerBase):
         logger.info('Remove key: %s Reason: %s' % (key, reason))
 
     def add_failure(self, key):
-        fail_times = self.cli.hget(key, 'fail_times') or 0
-        fail_times = int(fail_times)
+        item = self.hgetall_dict(key)
+        fail_times = int(item.get('fail_times', 0))
+        current_fail_times = fail_times+1
 
-        if fail_times >= FAIL_TIMES_MAXIMUM:
+        if current_fail_times >= FAIL_TIMES_MAXIMUM:
             self.delete(key, 'Failed %s times' % fail_times)
         else:
-            self.cli.hincrby(key, 'fail_times', 1)
-            logger.debug('Key: %s Fail times: %s' % (key, fail_times + 1))
+            if valid_format(item):
+                self.cli.hincrby(key, 'fail_times', 1)
+                logger.debug('Key: %s Fail times: %s' %
+                             (key, current_fail_times))
 
-    def new_proxy(self, item):
+    def new_proxy(self, item: dict):
         key = build_key(item)
 
         logger.debug('Got proxy: %s' % item)
-        # if not self.cli.exists(key):
 
         return self.cli.hmset_dict(key, item)
 
@@ -96,7 +98,10 @@ class BlockingProxyServer(_ProxyServerBase):
                 result = keys
             else:
                 for key in keys:
-                    result.append(self.cli.hgetall(key))
+                    item = self.hgetall_dict(key)
+
+                    if valid_format(item):
+                        result.append(item)
 
         return result
 
@@ -152,15 +157,19 @@ class ProxyServer(_ProxyServerBase):
         return await self.cli.keys('%s*' % key_prefix) or []
 
     async def add_failure(self, key):
-        fail_times = await self.cli.hget(key, 'fail_times') or 0
-        fail_times = int(fail_times)
+        item = await self.cli.hgetall(key)
+        fail_times = int(item.get('fail_times', 0))
 
-        if fail_times >= FAIL_TIMES_MAXIMUM:
+        current_fail_times = fail_times+1
+
+        if current_fail_times >= FAIL_TIMES_MAXIMUM:
             await self.cli.delete(key)
             logger.info('Remove key: %s' % key)
         else:
-            await self.cli.hincrby(key, 'fail_times', 1)
-            logger.debug('Key: %s Fail times: %s' % (key, fail_times + 1))
+            if valid_format(item):
+                await self.cli.hincrby(key, 'fail_times', 1)
+                logger.debug('Key: %s Fail times: %s' %
+                             (key, current_fail_times))
 
     async def new_proxy(self, item):
         key = build_key(item)
@@ -181,7 +190,10 @@ class ProxyServer(_ProxyServerBase):
                 result = keys
             else:
                 for key in keys:
-                    result.append(await self.cli.hgetall(key))
+                    item = await self.cli.hgetall(key)
+
+                    if valid_format(item):
+                        result.append(item)
 
         return result
 

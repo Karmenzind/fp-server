@@ -10,6 +10,9 @@ PORT_PATTERN = re.compile(r'^\d+$')
 
 
 def build_key(item):
+    if not valid_format(item):
+        raise AssertionError('Invalid item: %s' % item)
+
     key = '{prefix}{anonymity}:{scheme}:{ip}:{port}'.format(
         prefix=key_prefix,
         anonymity=item.get('anonymity'),
