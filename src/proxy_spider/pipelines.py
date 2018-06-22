@@ -16,15 +16,12 @@ class PersistencePipeline:
         self.cli = self.srv.cli
 
     def process_item(self, item, spider):
-        if not item:
-            raise DropItem('Dropped empty.')
-
-        if isinstance(item, Proxy):
-            logger = spider.logger
-            try:
-                self.srv.new_proxy(item)
-                logger.debug('Stored: %s' % item)
-            except:
-                logger.exception("Item: %s" % item)
+        if item and isinstance(item, Proxy):
+                logger = spider.logger
+                try:
+                    self.srv.save_proxy(item)
+                    logger.debug('Stored: %s' % item)
+                except:
+                    logger.exception("Item: %s" % item)
 
         return item

@@ -1,17 +1,12 @@
 # -*- coding: utf-8 -*-
-import json
-import time
 from urllib.parse import urljoin
 
-import scrapy
 from scrapy import Request
-from scrapy.http import Response
 from scrapy.linkextractors import LinkExtractor
-from scrapy.spiders import CrawlSpider, Rule
+from scrapy.spiders import Rule
 
-from proxy_spider import utils
-from proxy_spider.items import Proxy
 from proxy_spider.spiders import _BaseSpider
+from utils.collections import shuffled_range
 
 
 class Ip66Spider(_BaseSpider):
@@ -31,7 +26,9 @@ class Ip66Spider(_BaseSpider):
             'download_timeout': 20,
         }
 
-        for _page in range(1, 10):
+        # pages = shuffled_range(1, 100)
+
+        for _page in range(1, 100):
             if self.complete_condition():
                 break
             url = urljoin(base, '/%s.html' % _page)

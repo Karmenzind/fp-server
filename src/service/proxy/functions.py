@@ -5,14 +5,23 @@ import time
 import config
 
 key_prefix = 'proxy_'
+searchable_keys = ('anonymity', 'scheme', 'ip', 'port')
+
 IP_PATTERN = re.compile(r'^(\d+\.){3}\d+$')
 PORT_PATTERN = re.compile(r'^\d+$')
 
 
-def build_key(item):
-    if not valid_format(item):
-        raise AssertionError('Invalid item: %s' % item)
+def get_searchable_spec(spec):
+    _spec = {}
 
+    if spec:
+        _spec = {k: v for k, v in spec.items()
+                 if k in searchable_keys}
+
+    return _spec
+
+
+def build_key(item):
     key = '{prefix}{anonymity}:{scheme}:{ip}:{port}'.format(
         prefix=key_prefix,
         anonymity=item.get('anonymity'),

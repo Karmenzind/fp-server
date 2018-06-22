@@ -8,6 +8,7 @@ API for proxy
 
 from core import exceptions
 from core.web import WebHandler
+from service.proxy.serializers import ProxySerializer
 from service.proxy.proxy import proxy_srv
 from utils import log as logger
 from utils.routes import route
@@ -35,7 +36,13 @@ class GetProxyHandler(WebHandler):
 
         anonymity = self.get_param('anonymity')
         spec = dict(count=count, scheme=scheme, anonymity=anonymity)
-        items = await proxy_srv.query(spec)
+        _items = await proxy_srv.query(spec)
+        items = []
+
+        for i in _items:
+            s = ProxySerializer(i)
+            items.append(s.to_representation())
+
         data = {
             "count": len(items),
             "detail": items,

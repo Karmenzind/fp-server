@@ -1,16 +1,8 @@
 # -*- coding: utf-8 -*-
-import json
-import time
-
-import scrapy
 from scrapy import Request
-from scrapy.http import Response
-from scrapy.linkextractors import LinkExtractor
-from scrapy.spiders import CrawlSpider, Rule
 
-from proxy_spider import utils
-from proxy_spider.items import Proxy
 from proxy_spider.spiders import _BaseSpider
+from utils.collections import shuffled_range
 
 
 class XicidailiSpider(_BaseSpider):
@@ -19,7 +11,6 @@ class XicidailiSpider(_BaseSpider):
 
     def start_requests(self):
         for _type in ('nn', 'nt'):
-            # for _page in range(1, 51):
 
             for _page in range(1, 100):
                 if self.complete_condition():

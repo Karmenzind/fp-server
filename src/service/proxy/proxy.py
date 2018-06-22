@@ -12,8 +12,10 @@ from itertools import chain
 from scrapy import Item
 
 from core.db.redis import aioredis_pool, pyredis_pool
+from service.proxy.functions import (build_key, build_pattern,
+                                     get_searchable_spec, key_prefix)
+from service.proxy.serializers import ProxySerializer
 from utils import log as logger
-from utils.proxy import build_key, build_pattern, key_prefix, valid_format
 
 FAIL_TIMES_MAXIMUM = 5
 
@@ -22,16 +24,7 @@ class _ProxyServerBase:
     """
     common function
     """
-    available_keys = ('anonymity', 'scheme', 'ip', 'port')
-
-    def get_filtered_spec(self, spec):
-        _spec = {}
-
-        if spec:
-            _spec = {k: v for k, v in spec.items()
-                     if k in self.available_keys}
-
-        return _spec
+    # TODO
 
 
 class BlockingProxyServer(_ProxyServerBase):
@@ -68,27 +61,31 @@ class BlockingProxyServer(_ProxyServerBase):
 
     def add_failure(self, key):
         item = self.hgetall_dict(key)
+        s = ProxySerializer(item)
         fail_times = int(item.get('fail_times', 0))
         current_fail_times = fail_times+1
 
         if current_fail_times >= FAIL_TIMES_MAXIMUM:
             self.delete(key, 'Failed %s times' % fail_times)
         else:
-            if valid_format(item):
+            if s.is_valid():
                 self.cli.hincrby(key, 'fail_times', 1)
                 logger.debug('Key: %s Fail times: %s' %
                              (key, current_fail_times))
 
-    def new_proxy(self, item: dict):
-        key = build_key(item)
+    def save_proxy(self, item: dict):
+        s = ProxySerializer(item)
 
-        logger.debug('Got proxy: %s' % item)
+        if s.is_valid(raise_e=True):
+            save_res = self.cli.hmset_dict(s.key(), s.data())
+            logger.debug(
+                'Saving checked proxy: %s '
+                'HMSET result: %s' % (item, save_res)
+            )
 
-        return self.cli.hmset_dict(key, item)
-
-    def query(self, spec, return_keys=False):
+    def query(self, spec, return_keys=False) -> [dict]:
         result = []
-        _spec = self.get_filtered_spec(spec)
+        _spec = get_searchable_spec(spec)
         count = spec.get('count', 1)
 
         if count:
@@ -99,9 +96,7 @@ class BlockingProxyServer(_ProxyServerBase):
             else:
                 for key in keys:
                     item = self.hgetall_dict(key)
-
-                    if valid_format(item):
-                        result.append(item)
+                    result.append(item)
 
         return result
 
@@ -159,6 +154,7 @@ class ProxyServer(_ProxyServerBase):
     async def add_failure(self, key):
         item = await self.cli.hgetall(key)
         fail_times = int(item.get('fail_times', 0))
+        s = ProxySerializer(item)
 
         current_fail_times = fail_times+1
 
@@ -166,21 +162,23 @@ class ProxyServer(_ProxyServerBase):
             await self.cli.delete(key)
             logger.info('Remove key: %s' % key)
         else:
-            if valid_format(item):
+            if s.is_valid():
                 await self.cli.hincrby(key, 'fail_times', 1)
                 logger.debug('Key: %s Fail times: %s' %
                              (key, current_fail_times))
 
     async def new_proxy(self, item):
-        key = build_key(item)
+        s = ProxySerializer(item)
 
-        logger.debug('Got proxy: %s' % item)
-
-        return await self.cli.hmset_dict(key, item)
+        if s.is_valid(raise_e=True):
+            save_res = await self.cli.hmset_dict(s.key, item)
+            logger.info(
+                'Got proxy: %s hmset result: %s' % (item, save_res)
+            )
 
     async def query(self, spec, return_keys=False):
         result = []
-        _spec = self.get_filtered_spec(spec)
+        _spec = get_searchable_spec(spec)
         count = spec.get('count', 1)
 
         if count:
@@ -192,8 +190,7 @@ class ProxyServer(_ProxyServerBase):
                 for key in keys:
                     item = await self.cli.hgetall(key)
 
-                    if valid_format(item):
-                        result.append(item)
+                    result.append(item)
 
         return result
 

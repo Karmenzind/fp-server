@@ -56,7 +56,7 @@ pyredis_pool = init_pyredis_pool()
 
 
 def initial_clean():
-    from utils.spider import key_prefix
+    from service.spider.functions import key_prefix
     cli = pyredis_pool.acquire()
 
     to_delete = cli.keys('%s*' % key_prefix)

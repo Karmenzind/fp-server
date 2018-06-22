@@ -109,3 +109,4 @@ for_todo.md
 ./src/launch_spider.py
 .idea/
 config.yml.local
+build.sh

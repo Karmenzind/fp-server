@@ -12,9 +12,9 @@ from proxy_spider.spiders.checker import CheckerSpider
 from proxy_spider.spiders.kuaidaili import KuaidailiSpider
 from proxy_spider.spiders.xicidaili import XicidailiSpider
 from proxy_spider.spiders.yundaili import YundailiSpider
+from service.proxy.functions import key_prefix as proxy_key_prefix
 from utils import log as logger
-from utils.proxy import key_prefix as proxy_key_prefix
-from utils.spider import build_key, key_prefix  # , updated_crawler_settings
+from service.spider.functions import build_key, key_prefix  # , updated_crawler_settings
 
 
 class SpiderServer:

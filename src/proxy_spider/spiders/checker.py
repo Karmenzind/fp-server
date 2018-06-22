@@ -1,6 +1,7 @@
 # coding: utf-8
 from proxy_spider.spiders import _BaseSpider
-from utils.proxy import exceed_check_period, valid_format
+from service.proxy.functions import exceed_check_period, valid_format
+from proxy_spider.items import Proxy
 
 
 class CheckerSpider(_BaseSpider):
@@ -23,4 +24,5 @@ class CheckerSpider(_BaseSpider):
                 continue
 
             if exceed_check_period(last_check):
-                yield self.build_check_request(data)
+                item = Proxy(**data)
+                yield self.build_check_request(item)

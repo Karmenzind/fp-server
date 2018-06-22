@@ -1,16 +1,9 @@
 # -*- coding: utf-8 -*-
-import json
-import time
 
-import scrapy
 from scrapy import Request
-from scrapy.http import Response
-from scrapy.linkextractors import LinkExtractor
-from scrapy.spiders import CrawlSpider, Rule
 
-from proxy_spider import utils
-from proxy_spider.items import Proxy
 from proxy_spider.spiders import _BaseSpider
+from utils.collections import shuffled_range
 
 
 class KuaidailiSpider(_BaseSpider):
@@ -20,10 +13,12 @@ class KuaidailiSpider(_BaseSpider):
     def start_requests(self):
         meta = {
             # 'max_retry_times': 10,
-            'download_timeout': 20,
+            # 'download_timeout': 20,
         }
+        pages = range(1, 100)
+
         for _type in ('inha', 'intr'):
-            for _page in range(1, 100):
+            for _page in pages:
                 if self.complete_condition():
                     break
                 url = 'http://www.kuaidaili.com/free/%s/%s/' % (_type, _page)

@@ -12,11 +12,26 @@ from scrapy.spiders import CrawlSpider
 from twisted.internet.error import (DNSLookupError, TCPTimedOutError,
                                     TimeoutError)
 
+import requests
 import config
 from proxy_spider import utils
 from proxy_spider.items import Proxy
+from service.proxy.functions import build_key, valid_format
 from service.proxy.proxy import blocking_proxy_srv
-from utils.proxy import build_key, valid_format
+
+LOCAL_IP = None
+IP_CHECKER_API = 'http://api.ipify.org/?format=json'
+
+
+def get_local_ip():
+    global LOCAL_IP
+    if LOCAL_IP:
+        return LOCAL_IP
+    else:
+        r = requests.get(IP_CHECKER_API)
+        j = json.loads(r.text)
+        LOCAL_IP = j['ip']
+        return LOCAL_IP
 
 
 class _BaseSpider(CrawlSpider):
@@ -40,12 +55,12 @@ class _BaseSpider(CrawlSpider):
     def get_check_approach(self, scheme):
         # default_timeout = 10
         _both = [
-            ('{scheme}://httpbin.org/ip', self.parse_httpbin),
-            ('{scheme}://ipduh.com/anonymity-check/', self.parse_ipduh),
+            # ('{scheme}://httpbin.org/ip', self.parse_httpbin),
+            # ('{scheme}://ipduh.com/anonymity-check/', self.parse_ipduh),
             ('{scheme}://api.ipify.org/?format=json', self.parse_ipify),
         ]
         _http = [
-            ('http://ip-check.info/?lang=en/', self.parse_ipcheck),
+            # ('http://ip-check.info/?lang=en/', self.parse_ipcheck),
         ]
         _https = [
         ]
@@ -72,12 +87,12 @@ class _BaseSpider(CrawlSpider):
         spec = dict(ip=ip, port=port, scheme=scheme)
 
         if not valid_format(spec):
-            self.logger.debug('Wrong format: (%s, %s)' % (ip, port))
+            self.logger.debug('Got wrong format (%s, %s). Clear it.' % (ip, port))
 
             return {}
 
         if self.already_exists(spec):
-            self.logger.debug('Dropped duplicated: %s' % spec.values())
+            self.logger.debug('Got duplicated %s. Clear it.' % spec.values())
 
             return {}  # drop it
 
@@ -94,12 +109,14 @@ class _BaseSpider(CrawlSpider):
         if need_auth:
             item['user'], item['password'] = user, password
 
+        self.logger.debug('Got unchecked %s' % item)
+
         return self.build_check_request(item)
 
-    def build_check_request(self, item):
+    def build_check_request(self, item: Proxy):
         scheme = item.get('scheme')
         proxy_url = item.get('url')
-        self.logger.debug('Checking proxy: %s' % proxy_url)
+        self.logger.debug('Checking %s' % proxy_url)
 
         url, response_parser = self.get_check_approach(scheme)
         url = url.format(scheme=scheme)
@@ -137,12 +154,18 @@ class _BaseSpider(CrawlSpider):
         try:
             got_ip = parser(response) or ''
         except:
-            self.logger.exception('Failed when parse response.')
+            self.logger.exception(
+                'While checking %s with %s, '
+                'Failed to parse response %s. '
+                % (item,
+                   response.url,
+                   response.text)
+            )
 
-        if item['ip'] == got_ip.strip():
-            item['anonymity'] = 'anonymous'
-        else:
+        if got_ip.strip() == get_local_ip():
             item['anonymity'] = 'transparent'
+        else:
+            item['anonymity'] = 'anonymous'
         yield item
 
     def check_ip_failed(self, failure):

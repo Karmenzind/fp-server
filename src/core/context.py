@@ -2,14 +2,15 @@
 
 import asyncio
 import sys
-from tornado.platform.asyncio import AnyThreadEventLoopPolicy
 
 from tornado import options
 from tornado.ioloop import IOLoop
+from tornado.platform.asyncio import AnyThreadEventLoopPolicy
 from tornado.web import Application
 
 from core.middleware import Middleware
-from utils import log as logger, tools
+from utils import log as logger
+from utils import tools
 from utils.routes import route
 
 welcome = """
@@ -78,6 +79,7 @@ class TornadoContext(object):
         #     # tornado.ioloop.IOLoop.configure('tornado.platform.asyncio.AsyncIOMainLoop')
         #     self.loop = asyncio.get_event_loop()
         #     IOLoop().make_current()
+
         return self.loop
 
     def _load_settings(self):
@@ -98,6 +100,7 @@ class TornadoContext(object):
         self.handler_pathes = getattr(settings, 'HANDLER_PATHES', [])
 
         # HTTP监听端口号
+
         if len(sys.argv) > 1:
             self.http_port = sys.argv[1]
         else:
@@ -115,12 +118,17 @@ class TornadoContext(object):
         # redis配置
         self.redis_config = getattr(settings, 'REDIS', None)
 
-        # 是否支持跨域，True为支持，False为不支持，默认False
+        # 是否支持跨域
         self.cors = getattr(settings, 'ALLOW_CORS', False)
-        options.define('cors', self.cors, help='set http response header `Access-Control-Allow-Origin` to `*`')
+        options.define(
+            'cors',
+            self.cors,
+            help='set http response header `Access-Control-Allow-Origin` to `*`'
+        )
 
         # cookie加密字符串
-        self.cookie_secret = getattr(settings, 'COOKIE_SECRET', tools.get_uuid4())
+        self.cookie_secret = getattr(
+            settings, 'COOKIE_SECRET', tools.get_uuid4())
 
     def _init_logger(self):
         """ 初始化日志
@@ -128,10 +136,12 @@ class TornadoContext(object):
         level = self.log_config.get('level', 'debug')
         dirname = self.log_config.get('dir', './logs')
         filename = self.log_config.get('filename', 'fp-server.log')
+
         if self.console_output:
-            logger.initLogger()
+            logger.initLogger(level)
         else:
-            log_filename = '%s_%s.log' % (filename.split('.')[0], self.http_port)
+            log_filename = '%s_%s.log' % (
+                filename.split('.')[0], self.http_port)
             logger.initLogger(level, dirname, log_filename)
         options.parse_command_line()
 
@@ -147,14 +157,17 @@ class TornadoContext(object):
         """ 初始化数据库对象
         """
         logger.info('init db instance start >>>', caller=self)
+
         if self.mysql_config:
             from core.db.mysql import initMySQL
             logger.info('mysql config:', self.mysql_config, caller=self)
             initMySQL(**self.mysql_config)
+
         if self.mongo_config:
             from core.db.mongo import initMongodb
             logger.info('mongodb config:', self.mongo_config, caller=self)
             initMongodb(**self.mongo_config)
+
         if self.redis_config:
             from core.db.redis import init_aioredis_pool
             logger.info('redis config:', self.redis_config, caller=self)
@@ -168,6 +181,7 @@ class TornadoContext(object):
         """
         logger.info('load middleware start >>>', caller=self)
         middlewares = []
+
         for m in self.middlewares:
             l = m.split('.')
             class_name = l[-1]
@@ -175,12 +189,16 @@ class TornadoContext(object):
             mo = __import__(model, {}, {}, ['classes'])
             middleware = getattr(mo, class_name)
             instance = middleware()
+
             if not isinstance(instance, Middleware):
-                logger.warn('middleware must inherit from tbag.core.middleware.Middleware:', m, caller=self)
+                logger.warn(
+                    'middleware must inherit from tbag.core.middleware.Middleware:', m, caller=self)
+
                 continue
             middlewares.append(instance)
             logger.info('middleware:', middleware, caller=self)
-        options.define('middlewares', middlewares, help='set web api middlewares')
+        options.define('middlewares', middlewares,
+                       help='set web api middlewares')
         logger.info('load middleware done <<<', caller=self)
 
     def _init_application(self):
