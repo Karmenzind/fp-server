@@ -8,22 +8,30 @@ from tornado.ioloop import IOLoop
 import config
 from core.crawler import CRAWLER_RUNNER as crawler_runner
 from core.db.redis import aioredis_pool, pyredis_pool
+from proxy_spider.spiders.a3464 import A3464Spider
 from proxy_spider.spiders.checker import CheckerSpider
+from proxy_spider.spiders.coderbusy import CoderbusySpider
+from proxy_spider.spiders.ip66 import Ip66Spider
+from proxy_spider.spiders.ip89 import Ip89Spider
 from proxy_spider.spiders.kuaidaili import KuaidailiSpider
 from proxy_spider.spiders.xicidaili import XicidailiSpider
 from proxy_spider.spiders.yundaili import YundailiSpider
 from service.proxy.functions import key_prefix as proxy_key_prefix
+from service.spider.functions import build_key, key_prefix
 from utils import log as logger
-from service.spider.functions import build_key, key_prefix  # , updated_crawler_settings
 
 
 class SpiderServer:
     # TODO: move these to config file?
     enabled_crawlers = {
         'crawler': (
-            XicidailiSpider,
+            A3464Spider,
+            CoderbusySpider,
+            Ip66Spider,
             KuaidailiSpider,
+            XicidailiSpider,
             YundailiSpider,
+            # Ip89Spider,
             # IhuanSpider,
         ),
         'checker': (

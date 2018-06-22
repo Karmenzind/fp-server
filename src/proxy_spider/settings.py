@@ -10,6 +10,7 @@
 #     https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
 import os
+
 import config
 
 ###################################################################
@@ -31,23 +32,29 @@ def _get_log_config():
     _FILE = None
     log_config = getattr(config, 'LOG', {})
     # fix: divide log from tornado log
+
     if not getattr(config, 'CONSOLE_OUTPUT', 0):
         dirname = log_config.get('dir', './logs')
         dirname = os.path.expanduser(dirname)
+
         if not os.path.exists(dirname):
             os.mkdir(dirname)
 
         _FILE = os.path.join(dirname, 'spider.log')
     main_level = log_config.get('level')
+
     if main_level:
         _LEVEL = main_level.upper()
 
     return _FILE, _LEVEL
 
+
 # LOGGING
 LOG_STDOUT = True
 LOG_FILE, LOG_LEVEL = _get_log_config()
 
+RETRY_TIMES = 10
+RETRY_HTTP_CODES = [400, 500, 502, 503, 504, 408]
 
 #######################################################################
 #                               custom                                #
