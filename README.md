@@ -220,12 +220,19 @@ If you knew good free-proxy websites, please tell me and I will add them to this
 Supporting:
 - [x] [西刺代理](http://www.xicidaili.com)
 - [x] [快代理](http://www.kuaidaili.com)
-- [x] [云代理](http://www.ip3366.net) (partial)
+- [x] [云代理](http://www.ip3366.net)
 - [x] [66免费代理](http://www.66ip.cn/)
-- [ ] [小幻代理](https://ip.ihuan.me) (figuring)
+- [x] [无忧代理](http://www.data5u.com/free/index.shtml)
+- [x] [3464](http://www.3464.com/data/Proxy/http/)
+- [x] [coderbusy](https://proxy.coderbusy.com/)
+- [x] [ip181](http://www.ip181.com/)
+- [x] [iphai](http://www.iphai.com/free/ng)
 - [ ] [万能代理](http://wndaili.cn)
-- [ ] [89免费代理](http://www.89ip.cn/)
-- [ ] [无忧代理](http://www.data5u.com/free/index.shtml)
+- [ ] [小幻代理](https://ip.ihuan.me) (figuring)
+- [ ] [89免费代理](http://www.89ip.cn/)(figuring)
+- [ ] <del>[baizhongsou](http://ip.baizhongsou.com/)</del> (stop providing free proxies)
+
+Thanks to: [Golmic](https://github.com/lujqme) [Eric_Chan](https://github.com/CL545740896/)
 
 ## FAQ ##
 

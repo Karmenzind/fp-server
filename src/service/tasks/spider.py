@@ -11,14 +11,16 @@ class SpiderTasks(object):
         heart_beat_count = kwargs['heart_beat_count']
 
         def _checker_conditions():
+            # every 5 sec
             yield heart_beat_count < 60 and heart_beat_count % 5 == 0
             # every 1 min
-            yield heart_beat_count > 60 and heart_beat_count % 60 == 0
+            yield heart_beat_count >= 60 and heart_beat_count % 60 == 0
 
         def _crawler_conditions():
+            # every 10 sec
             yield heart_beat_count < 60 and heart_beat_count % 10 == 0
             # every 10 min
-            yield heart_beat_count > 60 and heart_beat_count % 600 == 0
+            yield heart_beat_count >= 60 and heart_beat_count % 600 == 0
 
         # IOLoop.current().run_in_executer()
         if any(_checker_conditions()):

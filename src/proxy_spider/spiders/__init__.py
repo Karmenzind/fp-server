@@ -55,8 +55,8 @@ class _BaseSpider(CrawlSpider):
     def get_check_approach(self, scheme):
         # default_timeout = 10
         _both = [
-            # ('{scheme}://httpbin.org/ip', self.parse_httpbin),
-            # ('{scheme}://ipduh.com/anonymity-check/', self.parse_ipduh),
+            ('{scheme}://httpbin.org/ip', self.parse_httpbin),
+            ('{scheme}://ipduh.com/anonymity-check/', self.parse_ipduh),
             ('{scheme}://api.ipify.org/?format=json', self.parse_ipify),
         ]
         _http = [

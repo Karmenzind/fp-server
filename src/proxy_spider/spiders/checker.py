@@ -10,6 +10,10 @@ class CheckerSpider(_BaseSpider):
     """
     name = 'checker'
     # allowed_domains = ['*']
+    custom_settings = {
+        'DOWNLOAD_DELAY': 3,
+        'CONCURRENT_REQUESTS_PER_DOMAIN': 8,
+    }
 
     def start_requests(self):
         keys = self.srv.get_all_keys()

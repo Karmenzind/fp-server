@@ -5,8 +5,8 @@
 # See documentation in:
 # https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
-import time
 import random
+import time
 
 from scrapy import log
 from scrapy.contrib.downloadermiddleware.retry import RetryMiddleware
@@ -68,6 +68,9 @@ class PureRedisMiddleware(HttpProxyMiddleware):
         self.logger = crawler.spider.logger
         self.auth_encoding = auth_encoding
         self.srv = blocking_proxy_srv
+        self.settings = crawler.settings
+        self.use_proxy_rate = self.settings.get('USE_PROXY_TO_CRAWL', 1)
+        # print(self.raw_rate)
 
     def fetch_proxy(self, scheme):
         """
@@ -81,7 +84,7 @@ class PureRedisMiddleware(HttpProxyMiddleware):
 
         params = {
             "scheme": scheme,
-            "anonymity": self.anonymity,
+            # "anonymity": self.anonymity,
             "count": 1,
         }
         try:
@@ -136,7 +139,11 @@ class PureRedisMiddleware(HttpProxyMiddleware):
         if scheme in ('http', 'https') and proxy_bypass(parsed.hostname):
             return
 
-        self._set_proxy(request, scheme)
+        if self.use_proxy_rate < 1:
+            if random.random() < self.use_proxy_rate:
+                self._set_proxy(request, scheme)
+        else:
+            self._set_proxy(request, scheme)
 
 
 class RandomUserAgentMiddleware:

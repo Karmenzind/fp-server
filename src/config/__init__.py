@@ -11,24 +11,29 @@ def _init_config():
     result = None
     conf_dir = os.path.dirname(__file__)
 
-    for fname in ('config.yml.local', 'config.yml'):
-        path = os.path.join(conf_dir, fname)
+    inside_docker = check_if_inside_docker()
+    internal_path = os.path.join(conf_dir, 'config.yml')
 
-        if os.path.exists(path):
-            result = parse_yaml(path)
-            break
+    if os.path.exists(internal_path):
+        result = parse_yaml(internal_path)
 
-    if check_if_inside_docker():
-        print('YOU ARE INSIDE A DOCKER CONTAINER')
-        ext_path = '/fps_config/config.yml'
-
-        if os.path.exists(ext_path):
-            ext_conf = parse_yaml(ext_path)
-            recursive_update(result, ext_conf)
-
-    if not result:
-        print("No available config found.")
+        if not result:
+            print("Invalid config file.")
+            sys.exit(255)
+    else:
+        print("Basic file %s not found." % internal_path)
         sys.exit(255)
+
+    if inside_docker:
+        print('** YOU ARE INSIDE A DOCKER CONTAINER **')
+        ext_path = '/fps_config/config.yml'
+    else:
+        ext_path = os.path.join(conf_dir, 'config.yml.local')
+
+    if os.path.exists(ext_path):
+        print('Found external config file %s' % ext_path)
+        ext_conf = parse_yaml(ext_path)
+        recursive_update(result, ext_conf)
 
     print("Got user config:")
     pprint.pprint(result)

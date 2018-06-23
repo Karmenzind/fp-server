@@ -11,9 +11,12 @@ from core.db.redis import aioredis_pool, pyredis_pool
 from proxy_spider.spiders.a3464 import A3464Spider
 from proxy_spider.spiders.checker import CheckerSpider
 from proxy_spider.spiders.coderbusy import CoderbusySpider
+from proxy_spider.spiders.data5u import Data5uSpider
 from proxy_spider.spiders.ip66 import Ip66Spider
-from proxy_spider.spiders.ip89 import Ip89Spider
+# from proxy_spider.spiders.ihuan import IhuanSpider
+# from proxy_spider.spiders.ip89 import Ip89Spider
 from proxy_spider.spiders.kuaidaili import KuaidailiSpider
+from proxy_spider.spiders.mix import MixSpider
 from proxy_spider.spiders.xicidaili import XicidailiSpider
 from proxy_spider.spiders.yundaili import YundailiSpider
 from service.proxy.functions import key_prefix as proxy_key_prefix
@@ -27,8 +30,10 @@ class SpiderServer:
         'crawler': (
             A3464Spider,
             CoderbusySpider,
+            Data5uSpider,
             Ip66Spider,
             KuaidailiSpider,
+            MixSpider,
             XicidailiSpider,
             YundailiSpider,
             # Ip89Spider,
@@ -95,7 +100,7 @@ class SpiderServer:
         t = int(time.time())
 
         await self.cli.set(key, t)
-        await self.cli.expire(key, 4 * 3600)
+        # await self.cli.expire(key, 4 * 3600)
 
         return t
 
