@@ -1,20 +1,20 @@
 # fp-server
 
-Free proxy server based on [Tornado](http://www.tornadoweb.org/en/stable/#) and [Scrapy](https://scrapy.org/).
+[![Scrutinizer Build](https://img.shields.io/scrutinizer/build/g/filp/whoops.svg?style=flat-square)](https://github.com/Karmenzind/fp-server) [![Python Version](https://img.shields.io/badge/python-3.5%2B-yellow.svg?style=flat-square)](https://www.python.org/) [![CocoaPods](https://img.shields.io/cocoapods/l/AFNetworking.svg?style=flat-square)](https://github.com/Karmenzind/fp-server)
+
+A free proxy server based on [Tornado](http://www.tornadoweb.org/en/stable/#) and [Scrapy](https://scrapy.org/). 
 
 Build your own proxy pool!
 
 Features:
-- continuesly crawling and providing free proxy
-- with friendly and easy-to-use HTTP api
+- continuously crawling and providing free proxies
 - asynchronous and high-perfermance
-- support high con-concurrent
-- automatically check proxy in cycle and ditch unavailable ones
+- automatically check proxies in cycle and ditch unavailable ones
+- easy-to-use HTTP api
 
-
-免费代理服务器，基于[Tornado](http://www.tornadoweb.org/en/stable/#)和[Scrapy](https://scrapy.org/)，在本地搭建属于自己的代理池
+免费代理服务器，基于[Tornado](http://www.tornadoweb.org/en/stable/#)和[Scrapy](https://scrapy.org/)，在本地搭建自己的代理池
 - 持续爬取新的免费代理，检测可用后存入本地数据库
-- 完全异步，支持高并发（从免费的前提下衡量……）
+- 完全异步，支持高并发
 - 易用的HTTP API
 - 周期性检测代理可用性，自动更新
 
@@ -136,7 +136,7 @@ anonymity               | O                 | choices:`transparent` `anonymous` 
 
 **screenshot**
 
-![](./pics/proxy_get.png)
+![](https://raw.githubusercontent.com/Karmenzind/i/master/fp-server/proxy_get.png)
 
 ### check status ###
 
@@ -152,7 +152,7 @@ No params.
 
 **screenshot**
 
-![](./pics/status.png)
+![](https://raw.githubusercontent.com/Karmenzind/i/master/fp-server/status.png)
 
 ## Config ##
 

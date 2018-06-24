@@ -2,9 +2,9 @@
 
 免费代理服务器，基于[Tornado](http://www.tornadoweb.org/en/stable/#)和[Scrapy](https://scrapy.org/)，在本地搭建属于自己的代理池
 
-目前特性：
+特性：
 - 持续爬取新的免费代理，检测可用后存入本地数据库
-- 完全异步，支持高并发（从免费的前提下衡量……）
+- 完全异步，支持高并发
 - 易用的HTTP API
 - 周期性检测代理可用性，自动更新
 
@@ -125,7 +125,7 @@ anonymity               | O                     | 匿名效果。可选:`transpa
 
 **截图**
 
-![](./pics/proxy_get.png)
+![](https://raw.githubusercontent.com/Karmenzind/i/master/fp-server/proxy_get.png)
 
 ### 查看状态 ###
 
@@ -141,7 +141,7 @@ GET /api/status/
 
 **screenshot**
 
-![](./pics/status.png)
+![](https://raw.githubusercontent.com/Karmenzind/i/master/fp-server/status.png)
 
 ## 配置 ##
 
