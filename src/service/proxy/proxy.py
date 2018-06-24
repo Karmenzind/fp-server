@@ -83,7 +83,7 @@ class BlockingProxyServer(_ProxyServerBase):
                 'HMSET result: %s' % (item, save_res)
             )
 
-    def query(self, spec, return_keys=False) -> [dict]:
+    def query(self, spec, return_keys=False):
         result = []
         _spec = get_searchable_spec(spec)
         count = spec.get('count', 1)

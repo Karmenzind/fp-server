@@ -14,7 +14,7 @@ class ProxySerializer:
     def get_value(self, key):
         return self._item.get(key)
 
-    def is_valid(self, raise_e=False) -> bool:
+    def is_valid(self, raise_e=False):
         """
         :param raise_e: whether raise exception
         :rtype: bool
@@ -27,10 +27,10 @@ class ProxySerializer:
             )
         return result
 
-    def data(self) -> dict:
+    def data(self):
         return dict(self._item)
 
-    def key(self) -> str:
+    def key(self):
         if not hasattr(self, '_is_valid'):
             assert hasattr(self, '_is_valid'), (
                 'You must call `.is_valid` at first'

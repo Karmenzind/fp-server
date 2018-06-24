@@ -22,7 +22,7 @@ Features:
 
 This project has been tested on:
 - Archlinux; Python-3.6.5
-- Debian(WSL); Python-3.5.3
+- Debian(WSL, Raspbian); Python-3.5.3
 
 And it **cannot directly run on windows**. Windows users may try [using Docker](#using-docker) or WSL to run this project.
 

@@ -113,6 +113,10 @@ def _log_msg_header(*args, **kwargs):
     except:
         pass
     finally:
-        msg_header = f'[{cls_name}.{func_name}] [{session_id}] '
+        msg_header = '[{cls_name}.{func_name}] [{session_id}] '.format(
+            cls_name=cls_name,
+            func_name=func_name,
+            session_id=session_id,
+        )
 
         return msg_header, kwargs

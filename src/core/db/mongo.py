@@ -25,9 +25,14 @@ def initMongodb(host='127.0.0.1:27017',
         username = quote_plus(username)
         password = quote_plus(password)
         host = quote_plus(host)
-        uri = f'mongodb://{username}:{password}@{host}/{dbname}'
+        uri = 'mongodb://{username}:{password}@{host}/{dbname}'.format(
+            username=username,
+            password=password,
+            host=host,
+            dbname=dbname,
+        )
     else:
-        uri = f"mongodb://{host}/{dbname}"
+        uri = "mongodb://{host}/{dbname}".format(host=host, dbname=dbname)
     mongo_client = motor.motor_tornado.MotorClient(uri)
     global MONGO_CONN
     MONGO_CONN = mongo_client

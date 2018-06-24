@@ -12,7 +12,7 @@
 
 已经测试通过的环境：
 - Archlinux; Python-3.6.5
-- Debian(wsl); Python-3.5.3
+- Debian(WSL, Raspbian); Python-3.5.3
 
 **代码暂不支持直接在Windows上运行，Windows用户请[选择Docker方式部署](#使用docker)或使用WSL……**
 
