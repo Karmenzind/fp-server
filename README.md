@@ -1,5 +1,9 @@
 # fp-server
 
+[![Scrutinizer Build](https://img.shields.io/scrutinizer/build/g/filp/whoops.svg?style=flat-square)](https://github.com/Karmenzind/fp-server) [![Python Version](https://img.shields.io/badge/python-3.5%2B-yellow.svg?style=flat-square)](https://www.python.org/) [![Docker Pulls](https://img.shields.io/docker/pulls/mashape/kong.svg?style=flat-square)](https://hub.docker.com/r/karmenzind/fp-server/) [![CocoaPods](https://img.shields.io/cocoapods/l/AFNetworking.svg?style=flat-square)](https://github.com/Karmenzind/fp-server)
+
+
+
 Free proxy server based on [Tornado](http://www.tornadoweb.org/en/stable/#) and [Scrapy](https://scrapy.org/).
 
 Build your own proxy pool!
@@ -36,7 +40,7 @@ And it **cannot directly run on windows**. Windows users may try [using Docker](
 * [web APIs](#web-apis)
     * [get proxies](#get-proxies)
     * [check status](#check-status)
-* [Config](#config)
+* [Configuration](#configuration)
     * [Introduction](#introduction)
     * [Customization](#customization)
 * [Source webs](#source-webs)
@@ -136,7 +140,7 @@ anonymity               | O                 | choices:`transparent` `anonymous` 
 
 **screenshot**
 
-![](./pics/proxy_get.png)
+![](https://raw.githubusercontent.com/Karmenzind/i/master/fp-server/proxy_get.png)
 
 ### check status ###
 
@@ -152,9 +156,9 @@ No params.
 
 **screenshot**
 
-![](./pics/status.png)
+![](https://raw.githubusercontent.com/Karmenzind/i/master/fp-server/status.png)
 
-## Config ##
+## Configuration ##
 
 ### Introduction ###
 I choose YAML language for configuration file. The defination and default value for supported items are:
