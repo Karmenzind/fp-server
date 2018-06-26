@@ -47,7 +47,6 @@ locals().update(_init_config())
 #                           internal config                           #
 #######################################################################
 
-
 # api module
 HANDLER_PATHES = ['api']
 
@@ -56,3 +55,13 @@ HANDLER_PATHES = ['api']
 
 # auto reload
 DEBUG = False
+
+# parallel limitations
+# None or 0: no limit
+MAX_RUNNING_NUM = {
+    'seeker': 7,
+    'checker': None,
+}
+
+# for checker (testing)
+CHECK_TIMEOUT = 20

@@ -22,11 +22,11 @@ class CoderbusySpider(_BaseSpider):
 
     rules = (
         Rule(LinkExtractor(allow=(r'classical.+aspx.*page=\d+$', )),
-             callback='parse',
+             callback='parse_items',
              follow=True),
     )
 
-    def parse(self, response):
+    def parse_items(self, response):
         for tr in response.xpath('//table[@class="table"]/tbody/tr'):
             td = tr.xpath('./td[@class="port-box"]')
             ip = td.xpath('@data-ip').get()

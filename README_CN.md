@@ -215,6 +215,8 @@ PROXY_STORE_CHECK_SEC: 3600
 - [x] [coderbusy](https://proxy.coderbusy.com/)
 - [x] [ip181](http://www.ip181.com/)
 - [x] [iphai](http://www.iphai.com/free/ng)
+- [x] [a2u](https://raw.githubusercontent.com/a2u/free-proxy-list/master/free-proxy-list.txt)
+- [x] [coolproxy](https://www.cool-proxy.net/proxies/http_proxy_list/country_code:/port:/anonymous:)
 - [ ] [万能代理](http://wndaili.cn)
 - [ ] [小幻代理](https://ip.ihuan.me) (figuring)
 - [ ] [89免费代理](http://www.89ip.cn/)(figuring)

@@ -50,19 +50,18 @@ class TornadoContext(object):
         self.loop = None
         self.setting_module = setting_module
 
+        self._install_twisted()
         self._init_event_loop_policy()
         self._get_event_loop()
         self._load_settings()
         self._init_logger()
         self._init_middlewares()
-        self._init_db_instance()
         self._init_crawler_runner()
+        self._init_db_instance()
         self._init_uri_routes()
         self._init_application()
+        self._db_initial_works()
         self._do_heartbeat()
-
-    def _init_event_loop_policy(self):
-        asyncio.set_event_loop_policy(AnyThreadEventLoopPolicy())
 
     def start(self):
         """ 启动
@@ -72,6 +71,9 @@ class TornadoContext(object):
         # self.loop.start()
         IOLoop.current().start()
         # self.loop.run_forever()
+
+    def _init_event_loop_policy(self):
+        asyncio.set_event_loop_policy(AnyThreadEventLoopPolicy())
 
     def _get_event_loop(self):
         # if not self.loop:
@@ -215,12 +217,21 @@ class TornadoContext(object):
     def _do_heartbeat(self):
         """ initialize heartbeat
         """
-        from core.heartbeat import heartbeat
+        from core.heartbeat import heartbeat, initial_tasks
         logger.info('Heartbeat started...')
         IOLoop.current().add_callback(heartbeat.start)
+        IOLoop.current().add_callback(initial_tasks)
 
     def _init_crawler_runner(self):
         """ initialize scrapy env and crawler runner
         """
         from core.crawler import init_crawler_runner
         init_crawler_runner()
+
+    def _db_initial_works(self):
+        from core.db.initial_works import do_initial_works
+        do_initial_works()
+
+    def _install_twisted(self):
+        import tornado.platform.twisted
+        tornado.platform.twisted.install()

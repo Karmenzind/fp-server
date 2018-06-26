@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 from urllib.parse import urljoin
 
@@ -14,8 +13,8 @@ class Ip89Spider(_BaseSpider):
     allowed_domains = ['www.89ip.cn']
 
     rules = (
-        Rule(LinkExtractor(allow=(r'index_\d+\.html$', )),
-             callback='parse',
+        Rule(LinkExtractor(allow=(r'index_\d+\.html$',)),
+             callback='parse_items',
              follow=True),
     )
 
@@ -32,9 +31,12 @@ class Ip89Spider(_BaseSpider):
             if self.complete_condition():
                 break
             url = urljoin(base, '/index_%s.html' % _page)
-            yield Request(url, meta=meta, dont_filter=True)
+            yield Request(url,
+                          callback=self.parse_items,
+                          meta=meta,
+                          dont_filter=True)
 
-    def parse(self, response):
+    def parse_items(self, response):
         for tr in response.xpath('//table[@class="layui-table"]/tbody/tr'):
             ex = tr.xpath('./td/text()').extract()
             ip = ex[0].strip()

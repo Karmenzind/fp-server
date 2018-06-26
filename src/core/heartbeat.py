@@ -6,7 +6,6 @@ from tornado.ioloop import IOLoop
 
 from utils import log as logger
 
-__all__ = ('heartbeat',)
 
 
 class HeartBeat(object):
@@ -47,3 +46,11 @@ class HeartBeat(object):
 
 
 heartbeat = HeartBeat()
+
+
+def initial_tasks():
+    from service.tasks.spider import SpiderTasks
+    spider_task = SpiderTasks()
+    heartbeat.register(spider_task.start)
+
+# __all__ = ('heartbeat',)

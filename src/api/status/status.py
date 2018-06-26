@@ -17,7 +17,7 @@ class Status(WebHandler):
         proxy_status = await proxy_srv.get_all_status()
         spider_data = await spider_srv.all_status()
         ret = {
-            "running_spiders": spider_data,
-            "stored_proxies": proxy_status,
+            "spiders": spider_data,
+            "proxies": proxy_status,
         }
         self.do_success(ret)

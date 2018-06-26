@@ -14,8 +14,8 @@ class Ip66Spider(_BaseSpider):
     allowed_domains = ['www.66ip.cn']
 
     rules = (
-        Rule(LinkExtractor(allow=(r'/\d+\.html$', )),
-             callback='parse',
+        Rule(LinkExtractor(allow=(r'/\d+\.html$',)),
+             callback='parse_items',
              follow=True),
     )
 
@@ -32,9 +32,12 @@ class Ip66Spider(_BaseSpider):
             if self.complete_condition():
                 break
             url = urljoin(base, '/%s.html' % _page)
-            yield Request(url, meta=meta, dont_filter=True)
+            yield Request(url,
+                          meta=meta,
+                          callback=self.parse_items,
+                          dont_filter=True)
 
-    def parse(self, response):
+    def parse_items(self, response):
         for tr in response.xpath('//div[@id="main"]//table/tr')[1:]:
             ex = tr.xpath('./td/text()').extract()
             ip = ex[0]

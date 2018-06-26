@@ -1,7 +1,7 @@
 # coding: utf-8
+from proxy_spider.items import Proxy
 from proxy_spider.spiders import _BaseSpider
 from service.proxy.functions import exceed_check_period, valid_format
-from proxy_spider.items import Proxy
 
 
 class CheckerSpider(_BaseSpider):

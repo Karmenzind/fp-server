@@ -9,6 +9,7 @@ searchable_keys = ('anonymity', 'scheme', 'ip', 'port')
 
 IP_PATTERN = re.compile(r'^(\d+\.){3}\d+$')
 PORT_PATTERN = re.compile(r'^\d+$')
+IP_PORT_PATTERN = re.compile(r'^(\d+\.){3}\d+:\d+$')
 
 
 def get_searchable_spec(spec):

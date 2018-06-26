@@ -5,6 +5,7 @@ import aioredis
 from utils import log as logger
 
 aioredis_pool = None
+# TODO: build a common class for redis
 
 
 def get_redis_config():
@@ -53,20 +54,6 @@ def init_pyredis_pool():
 
 
 pyredis_pool = init_pyredis_pool()
-
-
-def initial_clean():
-    from service.spider.functions import key_prefix
-    cli = pyredis_pool.acquire()
-
-    to_delete = cli.keys('%s*' % key_prefix)
-
-    for key in to_delete:
-        cli.delete(key)
-    logger.info('delete keys %s' % to_delete)
-
-
-initial_clean()
 
 
 class RedisDBBase:

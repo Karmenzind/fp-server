@@ -11,8 +11,7 @@ from itertools import chain
 
 from scrapy import Item
 
-from core.db.redis import aioredis_pool, pyredis_pool
-from service.proxy.functions import (build_key, build_pattern,
+from service.proxy.functions import (build_pattern,
                                      get_searchable_spec, key_prefix)
 from service.proxy.serializers import ProxySerializer
 from utils import log as logger
@@ -33,6 +32,7 @@ class BlockingProxyServer(_ProxyServerBase):
     """
 
     def __init__(self):
+        from core.db.redis import pyredis_pool
         self.cli = pyredis_pool.acquire()
         self.cli.hmset_dict = self.hmset_dict
 
@@ -124,8 +124,10 @@ class ProxyServer(_ProxyServerBase):
     aioredis version
     """
 
-    def __init__(self):
-        self.cli = aioredis_pool
+    @property
+    def cli(self):
+        from core.db.redis import aioredis_pool
+        return aioredis_pool
 
     async def get_all_status(self):
         all_keys = await self.get_all_keys()
