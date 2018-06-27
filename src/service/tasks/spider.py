@@ -4,10 +4,8 @@ from scrapy.crawler import Crawler
 from tornado.ioloop import IOLoop
 
 import config
-from core.crawler import (
-    CRAWLER_RUNNER as crawler_runner,
-    spider_keymap,
-)
+from core.crawler import CRAWLER_RUNNER as crawler_runner
+from core.crawler import spider_keymap
 from service.proxy.proxy import proxy_srv
 from service.spider.spider import spider_srv
 from utils import log as logger
@@ -36,6 +34,7 @@ class SpiderTasks(object):
             yield heart_beat_count >= 60 and heart_beat_count % 600 == 0
 
         # IOLoop.current().run_in_executer()
+
         if any(_checker_timers()) and await self.checker_condition():
             IOLoop.current().add_callback(self.execute_task, 'checker')
 
@@ -44,6 +43,7 @@ class SpiderTasks(object):
 
     async def execute_task(self, _type):
         key_and_spiders = await self.get_spiders_to_run(_type)
+
         return await self.start_crawling(key_and_spiders)
 
     async def checker_condition(self):
@@ -51,6 +51,7 @@ class SpiderTasks(object):
         placeholder
         :return: bool
         """
+
         return True
 
     async def seeker_condition(self):
@@ -64,7 +65,12 @@ class SpiderTasks(object):
 
     def get_max_running_rum(self, _type):
         _map = getattr(config, 'MAX_RUNNING_NUM', {})
-        return _map.get(_type, 0)
+        max_num = _map.get(_type, 0)
+
+        if max_num is None:
+            max_num = 999999
+
+        return max_num
 
     async def get_spiders_to_run(self, _type):
         """
@@ -73,8 +79,14 @@ class SpiderTasks(object):
         :param _type:
         :return: [(key, spider_cls)]
         """
-        result = []
         max_num = self.get_max_running_rum(_type)
+
+        # all is turned off
+
+        if not max_num:
+            logger.info('No %s will run.' % _type)
+
+            return []
 
         keymap = spider_keymap[_type]
         items = await spider_srv.all_status(_type=_type, with_key=True)
@@ -83,26 +95,33 @@ class SpiderTasks(object):
 
         # enough running spiders
         running_num = sum(1 for _ in items if _.get('status') == 'running')
-        if (max_num and running_num >= max_num) or running_num >= len(keymap):
-            logger.info('There are already %s running spiders.' % running_num)
-            return result
+
+        if (running_num >= max_num) or running_num >= len(keymap):
+            logger.debug(
+                'There are already %s running %ss.' % (running_num, _type)
+            )
+
+            return []
 
         # in keymap but not in redis
         existed_keys = [_['key'] for _ in items]
+
         if len(items) < len(keymap):
             alternatives += [k for k in keymap if k not in existed_keys]
 
         # not running
         not_running = [_ for _ in items if not (_.get('status') == 'running')]
+
         if not_running:
-            sorted_spiders = sorted(not_running,
-                                    key=lambda _: int(_.get('last_start_time', 0)))
+            sorted_spiders = sorted(
+                not_running,
+                key=lambda _: int(_.get('last_start_time', 0)),
+            )
             alternatives += [_.get('key') for _ in sorted_spiders]
 
         if max_num:
             alternatives = alternatives[:max_num - running_num]
-        result = [(k, v) for k, v in keymap.items() if k in alternatives]
-        return result
+        return [(k, v) for k, v in keymap.items() if k in alternatives]
 
     async def start_crawling(self, key_and_spiders):
         """
@@ -115,6 +134,7 @@ class SpiderTasks(object):
         for key, spider in key_and_spiders:
             await self.deploy_spider(key, spider)
             deployed.append(key)
+
         return deployed
 
     async def deploy_spider(self, key, spider):

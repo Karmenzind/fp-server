@@ -121,7 +121,7 @@ class _BaseSpider(CrawlSpider):
         url, response_parser = self.get_check_approach(scheme)
         url = url.format(scheme=scheme)
 
-        timeout = getattr(config, 'CHECK_TIMEOUT', 20),
+        timeout = getattr(config, 'CHECK_TIMEOUT', 20)
         meta = {
             'proxy': proxy_url,
             'max_retry_times': 5,

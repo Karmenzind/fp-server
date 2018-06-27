@@ -57,7 +57,8 @@ HANDLER_PATHES = ['api']
 DEBUG = False
 
 # parallel limitations
-# None or 0: no limit
+# None: no limit
+# 0   : turn off all
 MAX_RUNNING_NUM = {
     'seeker': 7,
     'checker': None,
