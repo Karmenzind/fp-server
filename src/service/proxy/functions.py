@@ -13,6 +13,10 @@ IP_PORT_PATTERN = re.compile(r'^(\d+\.){3}\d+:\d+$')
 
 
 def get_searchable_spec(spec):
+    """
+    :spec: filter the search conditions
+    :return: dict
+    """
     _spec = {}
 
     if spec:
@@ -23,6 +27,9 @@ def get_searchable_spec(spec):
 
 
 def build_key(item):
+    """
+    proxy items' key in redis
+    """
     key = '{prefix}{anonymity}:{scheme}:{ip}:{port}'.format(
         prefix=key_prefix,
         anonymity=item.get('anonymity'),
@@ -36,6 +43,11 @@ def build_key(item):
 
 
 def build_pattern(spec):
+    """
+    build pattern for searching
+
+    :return: str
+    """
     _pattern = '%s%s:%s:%s:%s' % (
         key_prefix,
         spec.get('anonymity') or '*',

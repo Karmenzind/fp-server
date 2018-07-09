@@ -26,6 +26,7 @@ class route(object):
         @param name 注册的uri别名
         """
         self.uri = uri
+
         if not name:
             name = '-'.join(uri.split('/'))
         self.name = name
@@ -33,12 +34,20 @@ class route(object):
     def __call__(self, _handler):
         """ gets called when we class decorate
         """
+
         for item in self._routes:
             if item.get('uri') == self.uri:
-                logger.error('uri aleady exists! uri:', self.uri, 'name:', self.name, 'handler:', _handler, caller=self)
+                logger.error('uri aleady exists! uri:', self.uri,
+                             'name:', self.name, 'handler:', _handler,
+                             caller=self)
+
             if item.get('name') == self.name:
-                logger.warn('name aleady exists! uri:', self.uri, 'name:', self.name, 'handler:', _handler, caller=self)
-        self._routes.append({'uri': self.uri, 'name': self.name, 'handler': _handler})
+                logger.warn('name aleady exists! uri:', self.uri,
+                            'name:', self.name, 'handler:', _handler,
+                            caller=self)
+        self._routes.append({'uri': self.uri, 'name': self.name,
+                             'handler': _handler})
+
         return _handler
 
     @classmethod
@@ -46,11 +55,18 @@ class route(object):
         """ 注册并返回所有的handler
         @param dirs list，需要注册uri路由的处理方法路径
         """
+
         for dir in dirs:
             s = 'import %s' % dir
             exec(s)
         routes = []
+
         for handler_dic in cls._routes:
-            logger.info('register uri:', handler_dic['uri'], 'handler:', handler_dic.get('handler'), caller=cls)
-            routes.append((handler_dic.get('uri'), handler_dic.get('handler')))
+            logger.info('register uri:', handler_dic['uri'],
+                        'handler:', handler_dic.get('handler'),
+                        caller=cls)
+            routes.append(
+                (handler_dic.get('uri'), handler_dic.get('handler'))
+            )
+
         return routes

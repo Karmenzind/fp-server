@@ -14,7 +14,8 @@ class AsyncHttpRequests(object):
     """
 
     @classmethod
-    async def get(cls, url, params=None, headers=None, decode_type='utf-8', parse_json=True, timeout=30):
+    async def get(cls, url, params=None, headers=None,
+                  decode_type='utf-8', parse_json=True, timeout=30):
         """ HTTP GET 请求
         @param url 请求url
         @param params 请求的uri qurey参数
@@ -24,18 +25,26 @@ class AsyncHttpRequests(object):
         @param timeout 请求超时时间，默认30秒
         @return data 返回的http body
         """
+
         if params:
             url = url_concat(url, params)
         http_client = AsyncHTTPClient()
-        response = await http_client.fetch(url, method='GET', headers=headers, request_timeout=timeout)
+        response = await http_client.fetch(url, method='GET',
+                                           headers=headers,
+                                           request_timeout=timeout)
+
         if response.code not in (200, 201, 202, 203, 204, 205, 206):
-            logger.error('url:', url, 'response code:', response.code, 'response body:', response.body, caller=cls)
+            logger.error('url:', url, 'response code:', response.code,
+                         'response body:', response.body, caller=cls)
             msg = '请求url失败: {url}'.format(url=url)
             raise exceptions.CustomException(msg=msg)
+
         if response.body:
             data = response.body
+
             if decode_type:
                 data = data.decode(decode_type)
+
             if parse_json:
                 return json.loads(data)
             else:
@@ -44,7 +53,8 @@ class AsyncHttpRequests(object):
             return None
 
     @classmethod
-    async def post(cls, url, params=None, body=None, headers=None, encode_type='utf-8', decode_type='utf-8',
+    async def post(cls, url, params=None, body=None, headers=None,
+                   encode_type='utf-8', decode_type='utf-8',
                    parse_json=True, timeout=30):
         """ HTTP POST 请求
         @param url 请求url
@@ -57,8 +67,10 @@ class AsyncHttpRequests(object):
         @param timeout 请求超时时间，默认30秒
         @return data 返回的http body
         """
+
         if params:
             url = url_concat(url, params)
+
         if body:
             if not encode_type:
                 pass
@@ -67,16 +79,23 @@ class AsyncHttpRequests(object):
             else:
                 body = urlencode(body, encoding=encode_type)
         http_client = AsyncHTTPClient()
-        response = await http_client.fetch(url, method='POST', body=body, headers=headers, request_timeout=timeout)
+        response = await http_client.fetch(url, method='POST', body=body,
+                                           headers=headers,
+                                           request_timeout=timeout)
+
         if response.code not in (200, 201, 202, 203, 204, 205, 206):
-            logger.error('url:', url, 'post data:', body, 'response code:', response.code, 'response body:',
-                         response.body, caller=cls)
+            logger.error('url:', url, 'post data:', body,
+                         'response code:', response.code,
+                         'response body:', response.body, caller=cls)
             msg = '请求url失败: {url}'.format(url=url)
             raise exceptions.CustomException(msg=msg)
+
         if response.body:
             data = response.body
+
             if decode_type:
                 data = data.decode(decode_type)
+
             if parse_json:
                 return json.loads(data)
             else:
