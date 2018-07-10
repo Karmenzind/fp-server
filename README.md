@@ -24,7 +24,7 @@ This project has been tested on:
 - Archlinux; Python-3.6.5
 - Debian(WSL, Raspbian); Python-3.5.3
 
-And it **cannot directly run on windows**. Windows users may try [using Docker](#using-docker) or WSL to run this project.
+And it **cannot directly run on Windows**. Windows users may try [using Docker](#using-docker) or WSL to run this project.
 
 ## Contents ##
 
@@ -48,8 +48,8 @@ And it **cannot directly run on windows**. Windows users may try [using Docker](
 
 ## Get started ##
 
-Firstly you should have [Redis](https://redis.io/) installed. Then choose either one option as follows.
-After successful deployment,  use the [APIs](#web-apis) to get proxies.
+Choose either one option as follows.
+After successful deployment, use the [APIs](#web-apis) to get proxies.
 
 ### Using Docker ###
 
@@ -58,7 +58,7 @@ The easiest way to run this repo is using [Docker](https://www.docker.com/). Ins
 # download the image
 docker pull karmenzind/fp-server:stable
 # run the container
-docker run -itd --name fpserver --net="host" karmenzind/fp-server:stable
+docker run -itd --name fpserver -p 12345:12345 karmenzind/fp-server:stable
 # check the output inside the container
 docker logs -f fpserver
 ```
@@ -66,7 +66,7 @@ For custom configuratiuon, see [this section](#config).
 
 ### Manually install ###
 
-1. Install `python>=3.5`(I use Python-3.6.5)
+1. Install [Redis](https://redis.io/) and `python>=3.5`(I use Python-3.6.5). 
 2. Clone this repo. 
 3. Install python packages by: 
 ```bash

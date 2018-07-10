@@ -37,7 +37,7 @@
 
 ## 安装使用 ##
 
-首先安装[Redis数据库](https://redis.io/)，然后选取下列方式之一安装部署本项目。
+选取下列方式之一安装部署本项目。
 安装完成之后，通过[API](#web接口)获取代理
 
 ### 使用Docker ###
@@ -47,7 +47,7 @@
 # 下载镜像
 docker pull karmenzind/fp-server:stable
 # 启动容器
-docker run -itd --name fpserver --net="host" karmenzind/fp-server:stable
+docker run -itd --name fpserver -p 12345:12345 karmenzind/fp-server:stable
 # 检查容器内部输出
 docker logs -f fpserver
 ```
@@ -55,7 +55,7 @@ docker logs -f fpserver
 
 ### 手动安装部署 ### 
 
-1. 安装`python>=3.5`(我用的是Python-3.6.5)
+1. 安装[Redis数据库](https://redis.io/)和`python>=3.5`(我用的是Python-3.6.5)
 2. 克隆这个项目 
 3. 安装所需的Python包
 ```bash
