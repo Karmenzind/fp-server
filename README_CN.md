@@ -101,7 +101,7 @@ anonymity               | O                     | 匿名效果。可选:`transpa
 
 -   获取10个HTTP匿名代理:
     ```
-    GET /api/proxy/?num=10&scheme=HTTP&anonymity=anonymous
+    GET /api/proxy/?count=10&scheme=HTTP&anonymity=anonymous
     ```
     返回：
     ```json

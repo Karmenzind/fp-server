@@ -53,7 +53,7 @@ After successful deployment, use the [APIs](#web-apis) to get proxies.
 
 ### Using Docker ###
 
-The easiest way to run this repo is using [Docker](https://www.docker.com/). Install Docker then run:
+The easiest way to run this repo is using [Docker](https://www.docker.com/). Install Docker and then run:
 ```bash
 # download the image
 docker pull karmenzind/fp-server:stable
@@ -112,7 +112,7 @@ anonymity               | O                 | choices:`transparent` `anonymous` 
 
 -   To acquire 10 proxies in HTTP scheme with anonymity:
     ```
-    GET /api/proxy/?num=10&scheme=HTTP&anonymity=anonymous
+    GET /api/proxy/?count=10&scheme=HTTP&anonymity=anonymous
     ```
     The response:
     ```json
