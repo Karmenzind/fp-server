@@ -47,6 +47,7 @@
 # 下载镜像
 docker pull karmenzind/fp-server:stable
 # 启动容器
+# 如果在配置文件修改了端口，此处的`-p`也需要修改
 docker run -itd --name fpserver -p 12345:12345 karmenzind/fp-server:stable
 # 检查容器内部输出
 docker logs -f fpserver
@@ -184,7 +185,7 @@ PROXY_STORE_CHECK_SEC: 3600
 - 使用Docker部署:
     - 在本地新建目录，如`/x/config_dir`，在其中新建配置文件`config.yml`，然后将docker-run命令修改如下：
         ```
-        docker run -itd --name fpserver --net="host" -v "/x/config_dir":"/fps-config" karmenzind/fp-server:stable
+        docker run -itd --name fpserver -p 12345:12345 -v "/x/config_dir":"/fps-config" karmenzind/fp-server:stable
         ```
     - 外部`config.yml`的内容可以为上述配置项的子集，例如：
         ```
@@ -196,8 +197,10 @@ PROXY_STORE_CHECK_SEC: 3600
         其他配置项会自动采用内部配置
     - 如果要指定日志文件，**不要**修改`config.yml`中的`LOG-dir`。在本地新建日志目录，如`/x/log_dir`，结合上一步，修改docker-run命令为：
         ```
-        docker run -itd --name fpserver --net="host" -v "/x/config_dir":"/fps_config" -v "/x/log_dir":"/fp_server/logs" karmenzind/fp-server:stable
+        docker run -itd --name fpserver -p 12345:12345 -v "/x/config_dir":"/fps_config" -v "/x/log_dir":"/fp_server/logs" karmenzind/fp-server:stable
         ```
+    - 没有必要修改内部端口。如果需要将HTTP端口映射到其他宿主机端口（如9999），将docker-run命令的`-p`参数修改为`-p 9999:12345`
+    - 如果需要在宿主机访问Redis数据库，可以给docker-run命令增加参数如`-p 6379:6379`
 - 手动方式部署：
     - 直接修改项目内文件: `src/config/config.yml`
 

@@ -58,6 +58,7 @@ The easiest way to run this repo is using [Docker](https://www.docker.com/). Ins
 # download the image
 docker pull karmenzind/fp-server:stable
 # run the container
+# don't forget to modify `-p` if you prefer another port
 docker run -itd --name fpserver -p 12345:12345 karmenzind/fp-server:stable
 # check the output inside the container
 docker logs -f fpserver
@@ -194,7 +195,7 @@ PROXY_STORE_CHECK_SEC: 3600
 - If you use Docker:
     - Create a directory such as `/x/config_dir` and put your `config.yml` in it. Then modify the docker-run command like this:
         ```
-        docker run -itd --name fpserver --net="host" -v "/x/config_dir":"/fps-config" karmenzind/fp-server:stable
+        docker run -itd --name fpserver -p 12345:12345 -v "/x/config_dir":"/fps-config" karmenzind/fp-server:stable
         ```
     - External `config.yml` doesn't need to contain all config items. For example, it can be:
         ```
@@ -206,8 +207,10 @@ PROXY_STORE_CHECK_SEC: 3600
         And other items will be default values.
     - If you need to set a log file, **don't** modify `LOG-dir` in `config.yml`. Instead create a directory for log file such as `/x/log_dir` and change the docker-run command like:
         ```
-        docker run -itd --name fpserver --net="host" -v "/x/config_dir":"/fps_config" -v "/x/log_dir":"/fp_server/logs" karmenzind/fp-server:stable
+        docker run -itd --name fpserver -p 12345:12345 -v "/x/config_dir":"/fps_config" -v "/x/log_dir":"/fp_server/logs" karmenzind/fp-server:stable
         ```
+    - There's no need to modify the exposed port of the container. If you prefer publishing it to another port(say, 9999) on the host, change the `-p` parameter in docker-run command to `-p 9999:12345`
+    - If you need to access the Redis from host, add a new publishing parameter like `-p 6379:6379` to docker-run command.
 - If you manually deploy the project:
     - Modify the internal config file: `src/config/common.py`
 
