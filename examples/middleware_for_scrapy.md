@@ -11,7 +11,7 @@ To use this in your project, you should:
 # and don't use scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware
 # at the same time
 DOWNLOADER_MIDDLEWARES = {
-    'proxy_spider.middlewares.FPServerMiddleware': 745,
+    'NameOfYourProject.middlewares.FPServerMiddleware': 745,
 }
 
 # follow your real settings
@@ -84,8 +84,7 @@ class FPServerMiddleware(HttpProxyMiddleware):
             text = req.text
             data = req.json()
         except:
-            self.crawler.logger.exception(
-                "Failed to fetch proxy: %s" % text)
+            self.logger.exception("Failed to fetch proxy: %s" % text)
         else:
             _code = data.get('code')
             _proxies = data.get('data', {}).get('detail', [])
