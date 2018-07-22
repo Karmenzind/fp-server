@@ -31,6 +31,9 @@
     * [修改](#修改)
 * [代理来源](#代理来源)
 * [FAQ](#faq)
+* [代码示例](#代码示例)
+    * [结合Python requests模块使用](#结合python-requests模块使用)
+    * [在Scrapy项目中使用](#在scrapy项目中使用)
 * [问题和需求](#问题和需求)
 
 <!-- vim-markdown-toc -->
@@ -239,7 +242,24 @@ PROXY_STORE_CHECK_SEC: 3600
 
 -   怎么把它用到我的项目里？
 
-    我写了一个[可以直接用在Scrapy项目里的middleware](./examples/middleware_for_scrapy.md)。后面有空我会写更多示例代码。
+    见下文。
+
+
+## 代码示例
+
+以下代码可以直接复制粘贴到你的项目。记得先检查修改配置。
+
+有空我会写更多例子，你也可以告诉我你需要什么。
+
+### 结合Python requests模块使用
+
+[戳这里](./examples/use_with_requests.md)。
+
+### 在Scrapy项目中使用
+
+这是个用于给每个请求获取、增加代理的[Scrapy中间件](./examples/middleware_for_scrapy.md)。把它复制到`middlewares.py`，然后修改`settings.py`里的`DOWNLOADER_MIDDLEWARES`。
+
+如果你需要维护一个Cookie池，给每个代理IP分配不同的CookieJar，可以参考我写的[这个中间件](https://github.com/Karmenzind/IcrisCrawler/blob/master/IcrisCrawler/middlewares.py#L126)。
 
 
 ## 问题和需求 ##

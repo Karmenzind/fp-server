@@ -29,22 +29,22 @@ E-Mail: valesail7@gmail.com
 class TornadoContext(object):
 
     def __init__(self, setting_module):
-        """ 初始化
-        @param setting_module   配置模块
-            `DEBUG`             debug模式，默认为False
+        """
+        @param setting_module   the loaded setting module
+            `DEBUG`             debug mode，default is False
             `CONSOLE_OUTPUT`    redirect log to console other than file if set to 1
-            `LOG`               日志配置
-                `level`         级别 DEBUG/INFO
-                `dir`           日志保存目录
-                `filename`          日志名
-            `HANDLER_PATHES`    uri注册处理器路径
-            `HTTP_PORT`         HTTP监听端口号
-            `MIDDLEWARES`       中间件配置
-            `ALLOW_CORS`        是否支持跨域，True为支持，False为不支持，默认False
-            `COOKIE_SECRET`     cookie加密字符串
-            `MYSQL`             mysql配置
-            `MONGODB`           mongodb配置
-            `REDIS`             redis配置
+            `LOG`               logging
+                `level`         DEBUG/INFO/...
+                `dir`           in which the log files be saved
+                `filename`      log file's name
+            `HANDLER_PATHES`    the uri handler module's relative path
+            `HTTP_PORT`         HTTP port
+            `MIDDLEWARES`       middlewares
+            `ALLOW_CORS`        whether support CORS，default: false
+            `COOKIE_SECRET`     cookie secret string
+            `MYSQL`             mysql
+            `MONGODB`           mongodb
+            `REDIS`             redis
         """
         print(welcome)
         self.loop = None
@@ -64,7 +64,7 @@ class TornadoContext(object):
         self._do_heartbeat()
 
     def start(self):
-        """ 启动
+        """ start event loop
         """
         logger.info('start io loop ...')
         # self.loop.start()
@@ -76,6 +76,7 @@ class TornadoContext(object):
         asyncio.set_event_loop_policy(AnyThreadEventLoopPolicy())
 
     def _get_event_loop(self):
+        # FIXIT
         # if not self.loop:
         #     # self.loop = IOLoop.current()
         #     # tornado.ioloop.IOLoop.configure('tornado.platform.asyncio.AsyncIOMainLoop')
@@ -85,42 +86,41 @@ class TornadoContext(object):
         return self.loop
 
     def _load_settings(self):
-        """ 加载配置
+        """ parse the settings
         """
         settings = __import__(self.setting_module, {}, {}, ['models'])
 
-        # 调试模式
+        # debug mode
         self.debug = getattr(settings, 'DEBUG', False)
 
-        # 运行模式
+        # whether open console_output
         self.console_output = getattr(settings, 'CONSOLE_OUTPUT', 1)
 
-        # 日志配置
+        # logging
         self.log_config = getattr(settings, 'LOG', {})
 
-        # uri处理路径
+        # path for uri handlers
         self.handler_pathes = getattr(settings, 'HANDLER_PATHES', [])
 
-        # HTTP监听端口号
-
+        # server HTTP port
         if len(sys.argv) > 1:
             self.http_port = sys.argv[1]
         else:
             self.http_port = getattr(settings, 'HTTP_PORT', 10000)
 
-        # 中间件
+        # middlewares
         self.middlewares = getattr(settings, 'MIDDLEWARES', [])
 
-        # mysql配置
+        # mysql
         self.mysql_config = getattr(settings, 'MYSQL', None)
 
-        # mongodb配置
+        # mongodb
         self.mongo_config = getattr(settings, 'MONGODB', None)
 
-        # redis配置
+        # redis
         self.redis_config = getattr(settings, 'REDIS', None)
 
-        # 是否支持跨域
+        # support cors
         self.cors = getattr(settings, 'ALLOW_CORS', False)
         options.define(
             'cors',
@@ -128,12 +128,12 @@ class TornadoContext(object):
             help='set http response header `Access-Control-Allow-Origin` to `*`'
         )
 
-        # cookie加密字符串
+        # cookie secret string
         self.cookie_secret = getattr(
             settings, 'COOKIE_SECRET', tools.get_uuid4())
 
     def _init_logger(self):
-        """ 初始化日志
+        """ create logger
         """
         level = self.log_config.get('level', 'debug')
         dirname = self.log_config.get('dir', './logs')
@@ -148,7 +148,7 @@ class TornadoContext(object):
         options.parse_command_line()
 
     def _init_uri_routes(self):
-        """ 初始化uri路由
+        """ initialize uri routes
         """
         logger.info('init uri routes start >>>', caller=self)
         handlers = route.make_routes(self.handler_pathes)
@@ -156,7 +156,7 @@ class TornadoContext(object):
         logger.info('init uri routes done <<<', caller=self)
 
     def _init_db_instance(self):
-        """ 初始化数据库对象
+        """ load database staff
         """
         logger.info('init db instance start >>>', caller=self)
 
@@ -179,7 +179,7 @@ class TornadoContext(object):
         logger.info('init db instance done <<<', caller=self)
 
     def _init_middlewares(self):
-        """ 加载中间件
+        """ load middlewares
         """
         logger.info('load middleware start >>>', caller=self)
         middlewares = []

@@ -41,6 +41,9 @@ And it **cannot directly run on Windows**. Windows users may try [using Docker](
     * [Customization](#customization)
 * [Source webs](#source-webs)
 * [FAQ](#faq)
+* [Examples](#examples)
+    * [Use fp-server with Python requests module](#use-fp-server-with-python-requests-module)
+    * [Use fp-server in Scrapy Project](#use-fp-server-in-scrapy-project)
 * [Bugs and feature requests](#bugs-and-feature-requests)
 * [TODOs and ideas](#todos-and-ideas)
 
@@ -251,7 +254,24 @@ Thanks to: [Golmic](https://github.com/lujqme) [Eric_Chan](https://github.com/CL
 
 -   **_How to use it in my project?_**
 
-    I wrote [a middleware for Scrapy](./examples/middleware_for_scrapy.md), which can be directly copied to your project. I will write more snipptes at leisure.
+    See the next section.
+
+
+## Examples
+
+These code can be directly copied to your project. **Remember** to modify the configuration and settings at first.
+
+I will write more snippets at leisure. Or you can tell me what example you want.
+
+### Use fp-server with Python requests module
+
+[Here.](./examples/use_with_requests.md)
+
+### Use fp-server in Scrapy Project
+
+Here is [a middleware for Scrapy](./examples/middleware_for_scrapy.md) to fetch and apply proxy for each request. Copy it to your `middlewares.py` and add the name to `DOWNLOADER_MIDDLEWARES` in your `settings.py`.
+
+If you want to keep a cookie pool for your proxies(an independent cookiejar for each IP), [this middleware](https://github.com/Karmenzind/IcrisCrawler/blob/master/IcrisCrawler/middlewares.py#L126) may help you.
 
 ## Bugs and feature requests ##
 
@@ -269,4 +289,4 @@ Known bugs:
 *   Add user-agent pool
 *   the checker's scheduler: 
     -   Periodically calculating the average speed of checking request, then reassign the checker based on this average and the quantity of stored proxies.
-
+*   Provide region information. 
