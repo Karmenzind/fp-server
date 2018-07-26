@@ -5,7 +5,7 @@ def _init_config():
     import os
     import sys
     from utils.docker import check_if_inside_docker
-    from utils.tools import parse_yaml, recursive_update
+    from utils.tools import parse_yaml, merge_configure
     import pprint
 
     result = None
@@ -15,6 +15,7 @@ def _init_config():
     internal_path = os.path.join(conf_dir, 'config.yml')
 
     if os.path.exists(internal_path):
+        print("Found internal configure file", internal_path)
         result = parse_yaml(internal_path)
 
         if not result:
@@ -33,7 +34,7 @@ def _init_config():
     if os.path.exists(ext_path):
         print('Found external config file %s' % ext_path)
         ext_conf = parse_yaml(ext_path)
-        recursive_update(result, ext_conf)
+        merge_configure(result, ext_conf)
 
     print("Got user config:")
     pprint.pprint(result)
