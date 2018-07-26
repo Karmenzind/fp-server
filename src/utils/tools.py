@@ -45,12 +45,12 @@ def parse_yaml(path):
         return yaml.load(f)
 
 
-def recursive_update(old, new):
+def merge_configure(old, new):
     """
+    this is just for configure updating
     :old: to be updated
     :new:
     """
-
     for key, value in new.items():
         if key in old:
             old_value = old[key]
@@ -68,6 +68,40 @@ def recursive_update(old, new):
                 old[key] = value
         else:
             old[key] = value
+
+
+# from copy import deepcopy
+
+# def recursive_updated(old, new):
+#     """
+#     for general scene
+
+#     :old: to be updated
+#     :new:
+#     :return: a new dict
+#     """
+#     result = deepcopy(old)
+
+#     for key, value in new.items():
+#         if key in result:
+#             old_value = result[key]
+#             if type(old_value) != type(value):
+#                 raise TypeError(
+#                     "[key: %s] old: %r new: %r" % (key, old_value, value)
+#                 )
+
+#             if isinstance(value, dict):
+#                 recursive_update(old_value, value)
+#             # elif isinstance(value, list):
+#             #     result[key] = old_value + value
+#             # elif isinstance(value, set):
+#             #     result[key] = old_value | value
+#             else:
+#                 result[key] = value
+#         else:
+#             result[key] = value
+
+#     return result
 
 
 def str_rot13(txt):
