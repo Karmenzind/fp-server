@@ -13,14 +13,12 @@ chardet==3.0.4
 constantly==15.1.0
 crc16==0.1.1
 crochet==1.9.0
-cryptography==2.2.2
+cryptography==2.3
 cssselect==1.0.3
 decorator==4.3.0
 hyperlink==18.0.0
 idna==2.6
 incremental==17.5.0
-ipython==6.4.0
-ipython-genutils==0.2.0
 jedi==0.12.0
 lxml==4.2.1
 motor==1.1

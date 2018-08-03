@@ -33,8 +33,7 @@ class SpiderTasks(object):
             # every 10 min
             yield heart_beat_count >= 60 and heart_beat_count % 600 == 0
 
-        # IOLoop.current().run_in_executer()
-
+        # consider using run_in_executor
         if any(_checker_timers()) and await self.checker_condition():
             IOLoop.current().add_callback(self.execute_task, 'checker')
 
