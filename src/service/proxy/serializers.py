@@ -66,10 +66,12 @@ class ProxySerializer:
 
     @property
     def key(self):
+        """ key that used in redis """
         assert hasattr(self, '_is_valid'), (
             'You must call `.is_valid` at first'
         )
-        return functions.build_key(self._item)
+        assert self._is_valid, 'Invalid data.'
+        return functions.build_key(self.validated_data)
 
     def to_representation(self):
         """

@@ -32,11 +32,10 @@ def build_key(item):
     """
     key = '{prefix}{anonymity}:{scheme}:{ip}:{port}'.format(
         prefix=key_prefix,
-        anonymity=item.get('anonymity'),
-        scheme=item.get('scheme'),
-        ip=item.get('ip'),
-        port=item.get('port'),
-
+        anonymity=item['anonymity'],
+        scheme=item['scheme'],
+        ip=item['ip'],
+        port=item['port'],
     )
 
     return key
