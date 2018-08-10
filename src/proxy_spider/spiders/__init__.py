@@ -97,7 +97,7 @@ class _BaseSpider(CrawlSpider):
             return {}  # drop it
 
         proxy_url = utils.build_proxy_url(ip, port, scheme, user, password)
-        need_auth = bool(user and password)
+        need_auth = int(bool(user and password))
         item = Proxy(
             ip=ip,
             scheme=scheme,

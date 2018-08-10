@@ -35,6 +35,7 @@ And it **cannot directly run on Windows**. Windows users may try [using Docker](
     * [Manually install](#manually-install)
 * [web APIs](#web-apis)
     * [get proxies](#get-proxies)
+    * [create new proxy](#create-new-proxy)
     * [check status](#check-status)
 * [Config](#config)
     * [Introduction](#introduction)
@@ -141,6 +142,28 @@ anonymity               | O                 | choices:`transparent` `anonymous` 
 **screenshot**
 
 ![](https://raw.githubusercontent.com/Karmenzind/i/master/fp-server/proxy_get.png)
+
+### create new proxy ###
+
+```
+POST /api/proxy/
+```
+
+ params   | Must/<br>Optional | detail                         | default
+----------|-------------------|--------------------------------|----------------------------|
+ip        | M                 | 例如 111.111.111.111           |
+port      | M                 | 例如 12345                     |
+scheme    | M                 | 可选:`HTTP` `HTTPS`            |
+anonymity | O                 | 可选:`transparent` `anonymous` | `transparent`
+need_auth | O                 | 可选: 0 1                      |
+user      | O                 |                                |
+password  | O                 |                                |
+url       | O                 |                                | 根据给定scheme+ip+port声称
+
+**screenshot**
+
+![](https://raw.githubusercontent.com/Karmenzind/i/master/fp-server/proxy_post.png)
+
 
 ### check status ###
 
@@ -280,6 +303,7 @@ Please [create an issue](https://github.com/Karmenzind/fp-server/issues/new) for
 
 Known bugs:
 *   Block while using Tornado-4.5.3
+*   Afer check, the redis key might change
 
 ## TODOs and ideas ##
 
@@ -290,3 +314,4 @@ Known bugs:
 *   the checker's scheduler: 
     -   Periodically calculating the average speed of checking request, then reassign the checker based on this average and the quantity of stored proxies.
 *   Provide region information. 
+*   use redis's HSET for calculation

@@ -11,7 +11,7 @@ from service.spider.spider import spider_srv
 from utils import log as logger
 
 
-class SpiderTasks(object):
+class SpiderTasks:
     """
     there are 2 kinds of spiders:
         seeker: to crawler new proxies
@@ -50,7 +50,6 @@ class SpiderTasks(object):
         placeholder
         :return: bool
         """
-
         return True
 
     async def seeker_condition(self):
@@ -81,10 +80,8 @@ class SpiderTasks(object):
         max_num = self.get_max_running_rum(_type)
 
         # all is turned off
-
         if not max_num:
             logger.info('No %s will run.' % _type)
-
             return []
 
         keymap = spider_keymap[_type]
@@ -99,7 +96,6 @@ class SpiderTasks(object):
             logger.debug(
                 'There are already %s running %ss.' % (running_num, _type)
             )
-
             return []
 
         # in keymap but not in redis

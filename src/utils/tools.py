@@ -104,6 +104,11 @@ def merge_configure(old, new):
 #     return result
 
 
+def subdict(base, keys):
+    return {k: v for k, v in base.items()
+            if k in keys}
+
+
 def str_rot13(txt):
     rot13 = str.maketrans(
         "ABCDEFGHIJKLMabcdefghijklmNOPQRSTUVWXYZnopqrstuvwxyz",

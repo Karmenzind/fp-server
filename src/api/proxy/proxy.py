@@ -8,10 +8,11 @@ API for proxy
 
 from core import exceptions
 from core.web import WebHandler
-from service.proxy.serializers import ProxySerializer
 from service.proxy.proxy import proxy_srv
+from service.proxy.serializers import ProxySerializer
 from utils import log as logger
 from utils.routes import route
+from utils.tools import subdict
 
 
 def return_developing():
@@ -48,15 +49,33 @@ class GetProxyHandler(WebHandler):
             "detail": items,
         }
         # sort_by_speed = self.get_param('sort_by_speed', 0)
-
         self.do_success(data)
 
     async def post(self, *args, **kwargs):
-        """ create proxies
+        """ create new proxies
         """
-        datas = self.get_body()
-        logger.debug('datas:', datas, caller=self)
-        self.do_success({'ok': 1}, 'todo')
+        item = self.get_body()
+        indispensibles = ('scheme', 'ip', 'port')
+        print(type(item), item)
+        for k in indispensibles:
+            if k not in item:
+                raise exceptions.ValidationError('%s cannot be empty.' % k)
+
+        _f = subdict(item, ['ip', 'port', 'scheme'])
+        existed = await proxy_srv.keys_by_dict(_f)
+        if existed:
+            self.do_success({'success': 0, 'key': existed},
+                            msg='key already existed')
+            return
+
+        try:
+            _key = await proxy_srv.new_proxy(item)
+            self.do_success({'success': 1, 'key': _key},
+                            msg='created successfully')
+            return
+        except Exception as e:
+            logger.exception('Failed: %s Detail: %s' % (item, e))
+            self.do_failed(code=400, msg=str(e))
 
     async def delete(self, *args, **kwargs):
         """ delete proxies
@@ -65,7 +84,7 @@ class GetProxyHandler(WebHandler):
 
 
 @route(r'/api/proxy/report/$')
-class ReposrProxyHandler(WebHandler):
+class ReportProxyHandler(WebHandler):
 
     async def post(self, *args, **kwargs):
         self.do_success({'ok': 1}, 'developing..')

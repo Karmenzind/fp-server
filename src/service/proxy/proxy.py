@@ -77,11 +77,12 @@ class BlockingProxyServer(_ProxyServerBase):
         s = ProxySerializer(item)
 
         if s.is_valid(raise_e=True):
-            save_res = self.cli.hmset_dict(s.key(), s.data())
+            save_res = self.cli.hmset_dict(s.key, s.validated_data)
             logger.debug(
                 'Saving checked proxy: %s '
-                'HMSET result: %s' % (item, save_res)
+                'HMSET result: %s' % (s.validated_data, save_res)
             )
+            return s.key
 
     def query(self, spec, return_keys=False):
         result = []
@@ -173,10 +174,12 @@ class ProxyServer(_ProxyServerBase):
         s = ProxySerializer(item)
 
         if s.is_valid(raise_e=True):
-            save_res = await self.cli.hmset_dict(s.key, item)
-            logger.info(
-                'Got proxy: %s hmset result: %s' % (item, save_res)
+            save_res = await self.cli.hmset_dict(s.key, s.validated_data)
+            logger.debug(
+                'Saving checked proxy: %s '
+                'HMSET result: %s' % (s.validated_data, save_res)
             )
+            return s.key
 
     async def query(self, spec, return_keys=False):
         result = []
@@ -191,7 +194,6 @@ class ProxyServer(_ProxyServerBase):
             else:
                 for key in keys:
                     item = await self.cli.hgetall(key)
-
                     result.append(item)
 
         return result

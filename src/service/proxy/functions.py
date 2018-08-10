@@ -75,10 +75,14 @@ def valid_format(proxy_item):
     scheme = proxy_item.get('scheme', '')
     ip = proxy_item.get('ip', '')
     port = proxy_item.get('port', '')
+    anonymity = proxy_item.get('anonymity', 'transparent')
+    if not isinstance(port, str):
+        port = str(port)
 
     def _conditions():
         yield scheme and ip and port
         yield scheme.lower() in ('http', 'https')
+        yield anonymity in ('anonymous', 'transparent')
         yield IP_PATTERN.match(ip)
         yield PORT_PATTERN.match(port)
 

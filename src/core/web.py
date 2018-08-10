@@ -97,7 +97,7 @@ class WebHandler(RequestHandler):
             try:
                 body = json.loads(body.decode('utf8'))
             except:
-                exceptions.ValidationError(msg='请求body数据格式错误')
+                raise exceptions.ValidationError(msg='请求body数据格式错误')
 
         return body
 
