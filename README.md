@@ -307,6 +307,8 @@ Known bugs:
 
 ## TODOs and ideas ##
 
+*   Use ZSET
+*   Add supervisor
 *   Divide log module
 *   More detailed api
 *   Web frontend via bootstrap
