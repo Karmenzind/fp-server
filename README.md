@@ -1,5 +1,9 @@
 # fp-server
 
+:exclamation: **This code really sucks. I'll rewrite it when I have free time. 这项目写的很烂，仅供参考，后续有时间会重构……**
+
+------
+
 [![Scrutinizer Build](https://img.shields.io/scrutinizer/build/g/filp/whoops.svg?style=flat-square)](https://github.com/Karmenzind/fp-server) [![Python Version](https://img.shields.io/badge/python-3.5%2B-yellow.svg?style=flat-square)](https://www.python.org/) [![CocoaPods](https://img.shields.io/cocoapods/l/AFNetworking.svg?style=flat-square)](https://github.com/Karmenzind/fp-server)
 
 A free proxy server based on [Tornado](http://www.tornadoweb.org/en/stable/#) and [Scrapy](https://scrapy.org/). 
