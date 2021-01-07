@@ -1,7 +1,7 @@
 aioredis==1.1.0
 beautifulsoup4==4.6.0
 bs4==0.0.1
-lxml==4.2.1
+lxml==4.6.2
 motor==1.1
 pymongo==3.6.1
 python-redis==0.1.7
