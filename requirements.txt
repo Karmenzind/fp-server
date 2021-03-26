@@ -10,4 +10,4 @@ requests==2.20.0
 Scrapy==1.5.0
 tornado==5.0.2
 Tornado-MySQL==0.5.1
-PyYAML==3.12
+PyYAML==5.4
