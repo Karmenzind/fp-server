@@ -8,6 +8,6 @@ python-redis==0.1.7
 redis==2.10.6
 requests==2.20.0
 Scrapy==1.5.0
-tornado==5.0.2
+tornado==6.3.2
 Tornado-MySQL==0.5.1
 PyYAML==5.4
